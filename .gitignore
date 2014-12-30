@@ -1,0 +1,10 @@
+# Ignore IDE project files
+# Ignore IntelliJ project directory and iml files
+.idea/
+*.iml
+
+# Ignore target directories
+target/
+
+# Meta data of Mac OS X's Finder.app
+.DS_Store

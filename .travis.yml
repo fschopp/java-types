@@ -1,0 +1,9 @@
+language: java
+jdk:
+  - openjdk7
+  - oraclejdk7
+  - oraclejdk8
+env:
+  - secure: "CuK1XRdWfTyOzUTig3y7Fcrovixrfx3uZR+l/b+ODHe9/XBzzEljddFpG7Dp6O8iH/fXZaCbgWv1ZVH1WZgNqShKiSRiJFWBlvTlptzplYOTQjVUJEHvEczyep6PrB0OG4A2QD6zl0rIhnUMfN+qQ6BJGk2yU60cF4MFpfVUjfQ="
+script: mvn verify -B
+after_success: bash .travis/after_success.sh

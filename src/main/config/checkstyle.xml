@@ -5,6 +5,11 @@
 
 <!--
 
+  ====
+  Note: This configuration file has been adapted to project "Java Types" from:
+  https://github.com/checkstyle/checkstyle/blob/master/sun_checks.xml
+  ====
+
   Checkstyle configuration that checks the sun coding conventions from:
 
     - the Java Language Specification at
@@ -50,11 +55,11 @@
     <!-- Checks that property files contain the same keys.         -->
     <!-- See http://checkstyle.sf.net/config_misc.html#Translation -->
     <module name="Translation"/>
-    
+
     <!-- Checks for Size Violations.                    -->
     <!-- See http://checkstyle.sf.net/config_sizes.html -->
     <module name="FileLength"/>
-    
+
     <!-- Checks for whitespace                               -->
     <!-- See http://checkstyle.sf.net/config_whitespace.html -->
     <module name="FileTabCharacter"/>
@@ -75,13 +80,35 @@
     <!--   <property name="fileExtensions" value="java"/> -->
     <!-- </module> -->
 
+    <!-- Allow use of @SuppressWarnings annotation in order to suppress checkstyle warnings. -->
+    <!-- See http://checkstyle.sourceforge.net/config.html -->
+    <!-- This filter only works in conjunction with a SuppressWarningsHolder, since that check finds the annotations in
+         the Java files and makes them available for the filter. Because of that, a configuration that includes this
+         filter must also include SuppressWarningsHolder as a child module of the TreeWalker. -->
+    <module name="SuppressWarningsFilter"/>
+
     <module name="TreeWalker">
 
         <!-- Checks for Javadoc comments.                     -->
         <!-- See http://checkstyle.sf.net/config_javadoc.html -->
-        <module name="JavadocMethod"/>
-        <module name="JavadocType"/>
-        <module name="JavadocVariable"/>
+        <module name="JavadocMethod">
+            <property name="scope" value="public"/>
+            <property name="allowMissingReturnTag" value="true"/>
+            <property name="allowMissingPropertyJavadoc" value="true"/>
+            <!-- We do not require JavaDoc comments for constructors. The default is: "METHOD_DEF, CTOR_DEF" -->
+            <property name="tokens" value="METHOD_DEF"/>
+            <!-- Allow documenting exceptions that are not declared in the method's 'throws' clause if they are a
+                 subclass of java.lang.RuntimeException -->
+            <property name="allowUndeclaredRTE" value="true"/>
+            <!-- Allow documented exceptions that are subclasses of one of the declared exceptions -->
+            <property name="allowThrowsTagsForSubclasses" value="true"/>
+        </module>
+        <module name="JavadocType">
+            <property name="scope" value="public"/>
+        </module>
+        <module name="JavadocVariable">
+            <property name="scope" value="public"/>
+        </module>
         <module name="JavadocStyle"/>
 
 
@@ -92,7 +119,9 @@
         <module name="LocalVariableName"/>
         <module name="MemberName"/>
         <module name="MethodName"/>
-        <module name="PackageName"/>
+        <module name="PackageName">
+            <property name="format" value="^[a-z]+(\.[a-z][a-z0-9]*)*$"/>
+        </module>
         <module name="ParameterName"/>
         <module name="StaticVariableName"/>
         <module name="TypeName"/>
@@ -108,7 +137,9 @@
 
         <!-- Checks for Size Violations.                    -->
         <!-- See http://checkstyle.sf.net/config_sizes.html -->
-        <module name="LineLength"/>
+        <module name="LineLength">
+            <property name="max" value="120"/>
+        </module>
         <module name="MethodLength"/>
         <module name="ParameterNumber"/>
 
@@ -144,13 +175,20 @@
 
         <!-- Checks for common coding problems               -->
         <!-- See http://checkstyle.sf.net/config_coding.html -->
-        <module name="AvoidInlineConditionals"/>
+        <!-- Inline conditionals can actually help readability when used judiciously and they are not nested. -->
+        <!-- <module name="AvoidInlineConditionals"/> -->
         <module name="EmptyStatement"/>
         <module name="EqualsHashCode"/>
-        <module name="HiddenField"/>
+        <module name="HiddenField">
+            <property name="ignoreConstructorParameter" value="true"/>
+            <property name="ignoreSetter" value="true"/>
+        </module>
         <module name="IllegalInstantiation"/>
         <module name="InnerAssignment"/>
-        <module name="MagicNumber"/>
+        <module name="MagicNumber">
+            <!-- ignore magic numbers in hashCode methods -->
+            <property name="ignoreHashCodeMethod" value="true"/>
+        </module>
         <module name="MissingSwitchDefault"/>
         <module name="RedundantThrows"/>
         <module name="SimplifyBooleanExpression"/>
@@ -158,7 +196,9 @@
 
         <!-- Checks for class design                         -->
         <!-- See http://checkstyle.sf.net/config_design.html -->
-        <module name="DesignForExtension"/>
+        <!-- The following would require that nonprivate, nonstatic methods of classes that can be subclassed must
+             either be abstract or final or have an empty implementation. This is too strict for our taste. -->
+        <!-- <module name="DesignForExtension"/> -->
         <module name="FinalClass"/>
         <module name="HideUtilityClassConstructor"/>
         <module name="InterfaceIsType"/>
@@ -168,10 +208,15 @@
         <!-- Miscellaneous other checks.                   -->
         <!-- See http://checkstyle.sf.net/config_misc.html -->
         <module name="ArrayTypeStyle"/>
-        <module name="FinalParameters"/>
+        <!-- We decided that requiring the final keyword for each parameter is too verbose -->
+        <!-- <module name="FinalParameters"/> -->
         <module name="TodoComment"/>
         <module name="UpperEll"/>
 
+        <!-- Maintains a set of check suppressions from @SuppressWarnings annotations. -->
+        <!-- See http://checkstyle.sourceforge.net/config_annotation.html -->
+        <!-- Required by module SuppressWarningsFilter above. -->
+        <module name="SuppressWarningsHolder" />
     </module>
 
 </module>
