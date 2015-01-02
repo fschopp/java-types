@@ -204,9 +204,9 @@
                     <tagNameFormat>v@{project.version}</tagNameFormat>
                     <!-- Disable the release profile that is part of the Maven Super POM -->
                     <useReleaseProfile>false</useReleaseProfile>
-                    <!-- During release:perform, enable the "release" profile -->
-                    <releaseProfiles>release</releaseProfiles>
-                    <goals>deploy</goals>
+                    <!-- During release:perform, enable the "release" and "ghpages" profiles -->
+                    <releaseProfiles>release,ghpages</releaseProfiles>
+                    <goals>deploy site</goals>
                 </configuration>
             </plugin>
         </plugins>
@@ -337,7 +337,6 @@
                         <configuration>
                             <message>Site for version '${project.version}'.</message>
                             <oauth2Token>${env.GH_TOKEN}</oauth2Token>
-                            <!-- There is no need to keep a history of the gh-pages branch. -->
                             <force>true</force>
                             <!-- Create a .nojekyll file at the root of the site. This setting is enabled because JaCoCo
                                  creates a directory that begins with an underscore. -->
