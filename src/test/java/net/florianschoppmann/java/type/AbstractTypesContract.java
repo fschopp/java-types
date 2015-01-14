@@ -27,7 +27,6 @@ import java.util.Set;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 
 /**
@@ -165,6 +164,7 @@ public final class AbstractTypesContract implements ITest {
             Collection.class, List.class, ArrayList.class, Set.class,
             Number.class, Integer.class,
             String.class,
+            getClass(),
             IntegerListSet.class, ImmutableIntegerListSet.class,
             DiamondA.class, DiamondB.class, DiamondC.class, DiamondD.class, SubDiamondB.class, SubSubDiamondB.class,
             SimpleA.class, SimpleB.class, SimpleC.class,
@@ -277,6 +277,7 @@ public final class AbstractTypesContract implements ITest {
         Map<TypeParameterElement, TypeMirror> substitutions = new LinkedHashMap<>();
         substitutions.put(diamondADeclaration.getTypeParameters().get(0), type(String.class));
         DeclaredType expectedType = types.getDeclaredType(
+            (DeclaredType) type(getClass()),
             diamondADeclaration,
             type(String.class), diamondADeclaration.getTypeParameters().get(1).asType()
         );
@@ -959,6 +960,22 @@ public final class AbstractTypesContract implements ITest {
         assertEquals(types.asElement(simpleTypeVariable), listDeclaration.getTypeParameters().get(0));
 
         assertNull(types.asElement(types.getPrimitiveType(TypeKind.INT)));
+    }
+
+    /**
+     * Verifies {@link javax.lang.model.element.TypeElement#asType()}.
+     */
+    @Test
+    public void asType() {
+        DeclaredType typesContractType = (DeclaredType) type(getClass());
+        TypeElement outerClassDeclaration = element(OuterClass.class);
+        TypeElement innerClassDeclaration = element(OuterClass.InnerClass.class);
+
+        DeclaredType outerClassType= types.getDeclaredType(
+            typesContractType, outerClassDeclaration, outerClassDeclaration.getTypeParameters().get(0).asType());
+        DeclaredType innerClassType = types.getDeclaredType(
+            outerClassType, innerClassDeclaration, innerClassDeclaration.getTypeParameters().get(0).asType());
+        assertEquals(innerClassDeclaration.asType(), innerClassType);
     }
 
     /**

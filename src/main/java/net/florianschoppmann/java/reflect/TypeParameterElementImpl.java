@@ -84,7 +84,7 @@ final class TypeParameterElementImpl extends ElementImpl implements TypeParamete
     }
 
     @Override
-    protected void finishDerivedFromElement(MirrorContext mirrorContext) {
+    void finishDerivedFromElement(MirrorContext mirrorContext) {
         bounds = mirrorContext.mirror(reflectionTypeVariable.getBounds());
         ReflectionTypeMirror bound = bounds.size() == 1
             ? bounds.get(0)

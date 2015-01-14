@@ -8,9 +8,7 @@ import org.testng.Assert;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 
-import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.ElementVisitor;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
@@ -27,7 +25,6 @@ import javax.lang.model.type.WildcardType;
 import javax.lang.model.util.AbstractElementVisitor7;
 import java.io.Serializable;
 import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;

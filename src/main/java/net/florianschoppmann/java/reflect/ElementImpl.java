@@ -19,7 +19,7 @@ abstract class ElementImpl extends AnnotatedConstructImpl implements ReflectionE
         }
     }
 
-    protected abstract void finishDerivedFromElement(MirrorContext mirrorContext);
+    abstract void finishDerivedFromElement(MirrorContext mirrorContext);
 
     final void finish(MirrorContext mirrorContext) {
         if (finished) {

@@ -7,6 +7,9 @@ import java.util.List;
 
 interface ReflectionElement extends Element, AnnotatedConstruct {
     @Override
+    ReflectionTypeMirror asType();
+
+    @Override
     ReflectionElement getEnclosingElement();
 
     @Override

@@ -16,10 +16,20 @@ final class TypeElementImpl extends ElementImpl implements TypeElement, Reflecti
     private final Class<?> clazz;
     private final ImmutableList<TypeParameterElementImpl> typeParameters;
     private ReflectionElement enclosingElement;
-    private DeclaredTypeImpl type;
     private ReflectionTypeMirror superClass;
     private List<ReflectionTypeMirror> interfaces;
     private List<ElementImpl> enclosedElements;
+
+    /**
+     * Cache the type returned by {@link #asType()}.
+     *
+     * <p>Similarly to {@link String#hashCode()}, caching is not synchronized. This means that different threads may
+     * (at least theoretically) see different values for this field. However, this is not a problem because all such
+     * values would compare equal. Moreover, §17.7 JLS specifies that "Writes to and reads of references are always
+     * atomic, regardless of whether they are implemented as 32-bit or 64-bit values". Hence, even if caches were
+     * updated, every access to this field would yield a well-defined result.
+     */
+    private DeclaredTypeImpl type;
 
     TypeElementImpl(Class<?> clazz) {
         this.clazz = Objects.requireNonNull(clazz);
@@ -115,7 +125,20 @@ final class TypeElementImpl extends ElementImpl implements TypeElement, Reflecti
     public DeclaredTypeImpl asType() {
         requireFinished();
 
-        return type;
+        DeclaredTypeImpl localType = type;
+        if (localType == null) {
+            List<TypeVariableImpl> prototypicalTypeArguments = new ArrayList<>(typeParameters.size());
+            for (TypeParameterElementImpl typeParameter: typeParameters) {
+                prototypicalTypeArguments.add(typeParameter.asType());
+            }
+
+            ReflectionTypeMirror enclosingType = enclosingElement == null
+                ? NoTypeImpl.NONE
+                : enclosingElement.asType();
+            localType = new DeclaredTypeImpl(enclosingType, this, prototypicalTypeArguments);
+            type = localType;
+        }
+        return localType;
     }
 
     @Override
@@ -155,10 +178,7 @@ final class TypeElementImpl extends ElementImpl implements TypeElement, Reflecti
             typeParameter.finish(mirrorContext);
         }
 
-        List<TypeVariableImpl> prototypicalTypeArguments = new ArrayList<>(typeParameters.size());
-        for (TypeParameterElementImpl typeParameter: typeParameters) {
-            prototypicalTypeArguments.add(typeParameter.asType());
-        }
-        type = new DeclaredTypeImpl(NoTypeImpl.NONE, this, prototypicalTypeArguments);
+        // Field 'type' is lazily initialized in order to break a dependency chain: Constructing type requires
+        // enclosingElement.asType(), which at this point may not yet be available.
     }
 }
