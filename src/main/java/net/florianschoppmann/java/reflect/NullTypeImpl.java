@@ -1,5 +1,6 @@
 package net.florianschoppmann.java.reflect;
 
+import javax.annotation.Nullable;
 import javax.lang.model.type.NullType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeVisitor;
@@ -13,7 +14,7 @@ final class NullTypeImpl extends AnnotatedConstructImpl implements ReflectionTyp
     }
 
     @Override
-    public <R, P> R accept(TypeVisitor<R, P> visitor, P parameter) {
+    public <R, P> R accept(TypeVisitor<R, P> visitor, @Nullable P parameter) {
         return visitor.visitNull(this, parameter);
     }
 

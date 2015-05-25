@@ -1,5 +1,6 @@
 package net.florianschoppmann.java.reflect;
 
+import javax.annotation.Nullable;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ElementVisitor;
 import javax.lang.model.element.Name;
@@ -12,7 +13,7 @@ final class TypeParameterElementImpl extends ElementImpl implements TypeParamete
     private final TypeVariable<?> reflectionTypeVariable;
     private final ElementImpl genericElement;
     private final TypeVariableImpl typeVariable;
-    private List<ReflectionTypeMirror> bounds;
+    @Nullable private List<ReflectionTypeMirror> bounds;
 
     TypeParameterElementImpl(TypeVariable<?> reflectionTypeVariable, ElementImpl genericElement) {
         this.reflectionTypeVariable = Objects.requireNonNull(reflectionTypeVariable);
@@ -21,7 +22,7 @@ final class TypeParameterElementImpl extends ElementImpl implements TypeParamete
     }
 
     @Override
-    public boolean equals(Object otherObject) {
+    public boolean equals(@Nullable Object otherObject) {
         if (this == otherObject) {
             return true;
         } else if (otherObject == null || getClass() != otherObject.getClass()) {
@@ -42,7 +43,7 @@ final class TypeParameterElementImpl extends ElementImpl implements TypeParamete
     }
 
     @Override
-    public <R, P> R accept(ElementVisitor<R, P> visitor, P parameter) {
+    public <R, P> R accept(ElementVisitor<R, P> visitor, @Nullable P parameter) {
         return visitor.visitTypeParameter(this, parameter);
     }
 
@@ -54,7 +55,7 @@ final class TypeParameterElementImpl extends ElementImpl implements TypeParamete
     @Override
     public List<ReflectionTypeMirror> getBounds() {
         requireFinished();
-
+        assert bounds != null : "must be non-null when finished";
         return bounds;
     }
 

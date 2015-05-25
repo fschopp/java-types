@@ -1,5 +1,6 @@
 package net.florianschoppmann.java.reflect;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,12 +50,12 @@ final class MirrorContext {
      * @return type element for the given class
      */
     TypeElementImpl typeDeclaration(Class<?> clazz) {
-        TypeElementImpl typeDeclaration = typeDeclarations.get(clazz);
+        @Nullable TypeElementImpl typeDeclaration = typeDeclarations.get(clazz);
         if (typeDeclaration != null) {
             return typeDeclaration;
         }
 
-        TypeElementImpl newTypeDeclaration = newTypeDeclarations.get(clazz);
+        @Nullable TypeElementImpl newTypeDeclaration = newTypeDeclarations.get(clazz);
         if (newTypeDeclaration == null) {
             newTypeDeclaration = new TypeElementImpl(clazz);
             newTypeDeclarations.put(clazz, newTypeDeclaration);

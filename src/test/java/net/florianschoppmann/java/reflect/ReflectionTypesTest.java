@@ -8,6 +8,7 @@ import org.testng.Assert;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 
+import javax.annotation.Nullable;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.PackageElement;
@@ -104,27 +105,27 @@ public final class ReflectionTypesTest {
         private static final ClassElementVisitor INSTANCE = new ClassElementVisitor();
 
         @Override
-        public Class<?> visitPackage(PackageElement e, Void aVoid) {
+        public Class<?> visitPackage(PackageElement e, @Nullable Void ignored) {
             return PackageElement.class;
         }
 
         @Override
-        public Class<?> visitType(TypeElement e, Void aVoid) {
+        public Class<?> visitType(TypeElement e, @Nullable Void ignored) {
             return TypeElement.class;
         }
 
         @Override
-        public Class<?> visitVariable(VariableElement e, Void aVoid) {
+        public Class<?> visitVariable(VariableElement e, @Nullable Void ignored) {
             return VariableElement.class;
         }
 
         @Override
-        public Class<?> visitExecutable(ExecutableElement e, Void aVoid) {
+        public Class<?> visitExecutable(ExecutableElement e, @Nullable Void ignored) {
             return ExecutableElement.class;
         }
 
         @Override
-        public Class<?> visitTypeParameter(TypeParameterElement e, Void aVoid) {
+        public Class<?> visitTypeParameter(TypeParameterElement e, @Nullable Void ignored) {
             return TypeParameterElement.class;
         }
     }

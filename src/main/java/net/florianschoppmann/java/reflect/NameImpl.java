@@ -1,5 +1,6 @@
 package net.florianschoppmann.java.reflect;
 
+import javax.annotation.Nullable;
 import javax.lang.model.element.Name;
 import java.util.Objects;
 
@@ -11,7 +12,7 @@ final class NameImpl implements Name {
     }
 
     @Override
-    public boolean equals(Object otherObject) {
+    public boolean equals(@Nullable Object otherObject) {
         if (this == otherObject) {
             return true;
         } else if (otherObject == null || getClass() != otherObject.getClass()) {

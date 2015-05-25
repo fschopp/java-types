@@ -1,0 +1,5 @@
+<root>
+  <item name='javax.lang.model.type.TypeMirror R accept(javax.lang.model.type.TypeVisitor&lt;R,P&gt;, P) 0'>
+    <annotation name='javax.annotation.Nonnull'/>
+  </item>
+</root>

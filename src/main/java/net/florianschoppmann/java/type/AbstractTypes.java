@@ -1,5 +1,6 @@
 package net.florianschoppmann.java.type;
 
+import javax.annotation.Nullable;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
@@ -29,7 +30,7 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
- * Abstract skeletal implementation of {@link javax.lang.model.util.Types}.
+ * Abstract skeletal implementation of {@link Types}.
  *
  * <p>This class provides a skeletal implementation of the {@link Types} interface. Specifically, it implements all
  * methods pertaining to §4.10 (subtyping) in the Java Language Specification (JLS). Concrete subclasses are expected to
@@ -47,13 +48,12 @@ import java.util.Set;
  * formal type parameter of {@code Collection<E>} (that is, {@code String} in this simple example).
  *
  * <p>Unless explicitly stated otherwise, all methods in this class expect non-null arguments. Passing null where not
- * expected will cause a {@link java.lang.NullPointerException} to be thrown. Implementations typically place additional
+ * expected will cause a {@link NullPointerException} to be thrown. Implementations typically place additional
  * restrictions on method arguments not captured by the types of the formal parameters (which stem from
  * {@link javax.lang.model} and its subpackages). While the details are implementation-defined, typically this means
- * that arguments must have been crated by the same implementation, or otherwise an
- * {@link java.lang.IllegalArgumentException} will be thrown. Implementations must override
- * {@link #requireValidType(TypeMirror)} and {@link #requireValidElement(Element)}, as these methods are expected to
- * perform any necessary validation.
+ * that arguments must have been crated by the same implementation, or otherwise an {@link IllegalArgumentException}
+ * will be thrown. Implementations must override {@link #requireValidType(TypeMirror)} and
+ * {@link #requireValidElement(Element)}, as these methods are expected to perform any necessary validation.
  */
 public abstract class AbstractTypes implements Types {
     private static final List<TypeKind> REFERENCE_TYPES = Collections.unmodifiableList(Arrays.asList(
@@ -92,7 +92,7 @@ public abstract class AbstractTypes implements Types {
      * @throws IllegalArgumentException if the given {@link TypeMirror} instance is non-null and it cannot be used with
      *     this class
      */
-    protected abstract void requireValidType(TypeMirror type);
+    protected abstract void requireValidType(@Nullable TypeMirror type);
 
     /**
      * Verifies that the given array is non-null and contains valid types that are not null.
@@ -112,8 +112,8 @@ public abstract class AbstractTypes implements Types {
     /**
      * Returns a type mirror corresponding to the given Java reflection type.
      *
-     * <p>Subclasses are required to return the appropriate {@link javax.lang.model.type.DeclaredType} instances for the
-     * following {@link java.lang.Class} instances:
+     * <p>Subclasses are required to return the appropriate {@link DeclaredType} instances for the following
+     * {@link Class} instances:
      * <ul><li>
      *     {@link Object}
      * </li><li>
@@ -150,7 +150,11 @@ public abstract class AbstractTypes implements Types {
      * Visitor of a type mirror. Returns a new type mirror after performing the substitutions passed as visitor
      * argument.
      *
+     * <p>This visitor is only used within this class and only on <em>valid</em> {@link TypeMirror} instances. Hence, it
+     * can be asserted that the visitor parameter is always non-null.
+     *
      * @see #substitutionVisitor
+     * @see #requireValidType(TypeMirror)
      */
     private final class SubstitutionVisitor extends ExtendedTypeKindVisitor7<TypeMirror, Substitutions> {
         private TypeMirror[] substituteInList(List<? extends TypeMirror> types, Substitutions substitutions) {
@@ -164,7 +168,8 @@ public abstract class AbstractTypes implements Types {
         }
 
         @Override
-        public TypeMirror visitDeclared(DeclaredType declaredType, Substitutions substitutions) {
+        public TypeMirror visitDeclared(DeclaredType declaredType, @Nullable Substitutions substitutions) {
+            assert substitutions != null;
             TypeMirror enclosingType = declaredType.getEnclosingType();
             TypeElement typeDeclaration = (TypeElement) declaredType.asElement();
             TypeMirror[] substitutedArguments = substituteInList(declaredType.getTypeArguments(), substitutions);
@@ -176,19 +181,21 @@ public abstract class AbstractTypes implements Types {
         }
 
         @Override
-        public TypeMirror visitArray(ArrayType arrayType, Substitutions substitutions) {
+        public TypeMirror visitArray(ArrayType arrayType, @Nullable Substitutions substitutions) {
+            assert substitutions != null;
             return getArrayType(arrayType.getComponentType().accept(this, substitutions));
         }
 
         @Override
-        public TypeMirror visitTypeVariable(TypeVariable typeVariable, Substitutions substitutions) {
+        public TypeMirror visitTypeVariable(TypeVariable typeVariable, @Nullable Substitutions substitutions) {
+            assert substitutions != null;
             TypeParameterElement formalTypeParameter = (TypeParameterElement) typeVariable.asElement();
-            TypeVariable freshTypeVariable = substitutions.freshTypeVariables.get(formalTypeParameter);
+            @Nullable TypeVariable freshTypeVariable = substitutions.freshTypeVariables.get(formalTypeParameter);
             if (freshTypeVariable != null && formalTypeParameter.asType().equals(typeVariable)) {
                 return freshTypeVariable;
             }
 
-            TypeMirror substitution = substitutions.map.get(formalTypeParameter);
+            @Nullable TypeMirror substitution = substitutions.map.get(formalTypeParameter);
             if (substitution != null) {
                 return substitution;
             }
@@ -202,9 +209,10 @@ public abstract class AbstractTypes implements Types {
         }
 
         @Override
-        public TypeMirror visitWildcard(WildcardType wildcardType, Substitutions substitutions) {
-            TypeMirror extendsBounds = wildcardType.getExtendsBound();
-            TypeMirror superBound = wildcardType.getSuperBound();
+        public TypeMirror visitWildcard(WildcardType wildcardType, @Nullable Substitutions substitutions) {
+            assert substitutions != null;
+            @Nullable TypeMirror extendsBounds = wildcardType.getExtendsBound();
+            @Nullable TypeMirror superBound = wildcardType.getSuperBound();
 
             return getWildcardType(
                 extendsBounds != null
@@ -217,7 +225,8 @@ public abstract class AbstractTypes implements Types {
         }
 
         @Override
-        public TypeMirror visitIntersection(IntersectionType intersectionType, Substitutions substitutions) {
+        public TypeMirror visitIntersection(IntersectionType intersectionType, @Nullable Substitutions substitutions) {
+            assert substitutions != null;
             return getIntersectionType(substituteInList(intersectionType.getBounds(), substitutions));
         }
 
@@ -326,6 +335,7 @@ public abstract class AbstractTypes implements Types {
      *     {@code null} if {@code subType} is not a subtype of {@code typeElement}
      * @throws IllegalArgumentException if the arguments do not satisfy the constraints mentioned above
      */
+    @Nullable
     public final List<? extends TypeMirror> resolveActualTypeArguments(TypeElement typeElement, TypeMirror subType) {
         requireValidElement(Objects.requireNonNull(typeElement));
         requireValidType(Objects.requireNonNull(subType));
@@ -338,7 +348,7 @@ public abstract class AbstractTypes implements Types {
 
         // getShortestPathToSuperType() will throw an exception if subType does not satisfy the constraints mentioned
         // above.
-        List<DeclaredType> path = getShortestPathToSuperType(typeElement, declaredSubType);
+        @Nullable List<DeclaredType> path = getShortestPathToSuperType(typeElement, declaredSubType);
         if (path == null) {
             return null;
         }
@@ -379,7 +389,11 @@ public abstract class AbstractTypes implements Types {
      * Visitor of a type mirror. Returns whether the visited type mirror is a subtype of the visitor argument (of type
      * {@link DeclaredType}).
      *
+     * <p>This visitor is only used within this class and only on <em>valid</em> {@link TypeMirror} instances. Hence, it
+     * can be asserted that the visitor parameter is always non-null.
+     *
      * @see #declaredTypeSubtypeVisitor
+     * @see #requireValidType(TypeMirror)
      */
     private final class DeclaredTypeSubtypeVisitor extends ExtendedTypeKindVisitor7<Boolean, DeclaredType> {
         private DeclaredTypeSubtypeVisitor() {
@@ -394,7 +408,8 @@ public abstract class AbstractTypes implements Types {
          * {@code subType} are <em>contained</em> in those of {@code superType}.
          */
         @Override
-        public Boolean visitDeclared(DeclaredType subType, DeclaredType superType) {
+        public Boolean visitDeclared(DeclaredType subType, @Nullable DeclaredType superType) {
+            assert superType != null;
             DeclaredType actualSubType = subType;
 
             // First test if there subType has at least one wildcard type argument. In that case, we need to perform a
@@ -415,7 +430,7 @@ public abstract class AbstractTypes implements Types {
 
             // Resolve the actual type parameters of subType when projected onto the superType
             TypeElement superTypeDeclaration = (TypeElement) superType.asElement();
-            List<? extends TypeMirror> projectedTypeArguments
+            @Nullable List<? extends TypeMirror> projectedTypeArguments
                 = resolveActualTypeArguments(superTypeDeclaration, actualSubType);
 
             if (projectedTypeArguments == null) {
@@ -450,7 +465,8 @@ public abstract class AbstractTypes implements Types {
          * one of {@link Object}, {@link Cloneable}, or {@link Serializable}.
          */
         @Override
-        public Boolean visitArray(ArrayType subType, DeclaredType superType) {
+        public Boolean visitArray(ArrayType subType, @Nullable DeclaredType superType) {
+            assert superType != null;
             return typeMirror(Object.class).equals(superType)
                 || typeMirror(Cloneable.class).equals(superType)
                 || typeMirror(Serializable.class).equals(superType);
@@ -463,7 +479,8 @@ public abstract class AbstractTypes implements Types {
          * Hence, this method returns true if {@link TypeVariable#getUpperBound()} is a subtype of {@code superType}.
          */
         @Override
-        public Boolean visitTypeVariable(TypeVariable subType, DeclaredType superType) {
+        public Boolean visitTypeVariable(TypeVariable subType, @Nullable DeclaredType superType) {
+            assert superType != null;
             return isSubtype(subType.getUpperBound(), superType);
         }
 
@@ -475,7 +492,8 @@ public abstract class AbstractTypes implements Types {
          * {@link IntersectionType#getBounds()} is a subtype of {@code superType}.
          */
         @Override
-        public Boolean visitIntersection(IntersectionType subType, DeclaredType superType) {
+        public Boolean visitIntersection(IntersectionType subType, @Nullable DeclaredType superType) {
+            assert superType != null;
             for (TypeMirror bound: subType.getBounds()) {
                 if (isSubtype(bound, superType)) {
                     return true;
@@ -497,7 +515,11 @@ public abstract class AbstractTypes implements Types {
      * Likewise, {@link NoType} is not used to model proper types, but only empty bounds, non-existence of interface
      * super classes, etc.
      *
+     * <p>This visitor is only used within this class and only on <em>valid</em> {@link TypeMirror} instances. Hence, it
+     * can be asserted that the visitor parameter is always non-null.
+     *
      * @see #subtypeVisitor
+     * @see #requireValidType(TypeMirror)
      */
     private final class SubtypeVisitor extends ExtendedTypeKindVisitor7<Boolean, TypeMirror> {
         private SubtypeVisitor() {
@@ -513,7 +535,8 @@ public abstract class AbstractTypes implements Types {
          * {@link AbstractTypes#isSubtype(TypeMirror, TypeMirror)} to the component types.
          */
         @Override
-        public Boolean visitArray(ArrayType superType, TypeMirror subType) {
+        public Boolean visitArray(ArrayType superType, @Nullable TypeMirror subType) {
+            assert subType != null;
             return subType.getKind() == TypeKind.ARRAY
                 && isSubtype(((ArrayType) subType).getComponentType(), superType.getComponentType());
         }
@@ -524,7 +547,8 @@ public abstract class AbstractTypes implements Types {
          * <p>This method has {@link DeclaredTypeSubtypeVisitor} visit {@code subType}.
          */
         @Override
-        public Boolean visitDeclared(DeclaredType superType, TypeMirror subType) {
+        public Boolean visitDeclared(DeclaredType superType, @Nullable TypeMirror subType) {
+            assert subType != null;
             return subType.accept(declaredTypeSubtypeVisitor, superType);
         }
 
@@ -537,7 +561,8 @@ public abstract class AbstractTypes implements Types {
          * Returns whether the primitive type is a supertype of the given type.
          */
         @Override
-        public Boolean visitPrimitive(PrimitiveType superType, TypeMirror subType) {
+        public Boolean visitPrimitive(PrimitiveType superType, @Nullable TypeMirror subType) {
+            assert subType != null;
             if (!subType.getKind().isPrimitive()) {
                 return false;
             }
@@ -554,7 +579,8 @@ public abstract class AbstractTypes implements Types {
          * <p>A type variable is only a supertype of its lower bound.
          */
         @Override
-        public Boolean visitTypeVariable(TypeVariable superType, TypeMirror subType) {
+        public Boolean visitTypeVariable(TypeVariable superType, @Nullable TypeMirror subType) {
+            assert subType != null;
             return isSameType(superType.getLowerBound(), subType);
         }
 
@@ -570,7 +596,8 @@ public abstract class AbstractTypes implements Types {
          * <p>Therefore, an intersection type is only a supertype of itself.
          */
         @Override
-        public Boolean visitIntersection(IntersectionType superType, TypeMirror subType) {
+        public Boolean visitIntersection(IntersectionType superType, @Nullable TypeMirror subType) {
+            assert subType != null;
             return isSameType(superType, subType);
         }
     }
@@ -636,15 +663,15 @@ public abstract class AbstractTypes implements Types {
         // 2. T <= ? super T
 
         if (t1.getKind() == TypeKind.WILDCARD) {
-            TypeMirror t1ExtendsBound = ((WildcardType) t1).getExtendsBound();
-            TypeMirror t1SuperBound = ((WildcardType) t1).getSuperBound();
+            @Nullable TypeMirror t1ExtendsBound = ((WildcardType) t1).getExtendsBound();
+            @Nullable TypeMirror t1SuperBound = ((WildcardType) t1).getSuperBound();
             boolean t1HasExtendsBound = t1ExtendsBound != null;
             boolean t1HasSuperBound = t1SuperBound != null;
 
             if (t2.getKind() == TypeKind.WILDCARD) {
                 // Handle (a).
-                TypeMirror t2ExtendsBound = ((WildcardType) t2).getExtendsBound();
-                TypeMirror t2SuperBound = ((WildcardType) t2).getSuperBound();
+                @Nullable TypeMirror t2ExtendsBound = ((WildcardType) t2).getExtendsBound();
+                @Nullable TypeMirror t2SuperBound = ((WildcardType) t2).getSuperBound();
 
                 if (t2ExtendsBound != null) {
                     if (t1ExtendsBound != null) {
@@ -725,7 +752,7 @@ public abstract class AbstractTypes implements Types {
          */
         private final DeclaredType declaredType;
 
-        private TypeDeclarationVertexState previous;
+        @Nullable private TypeDeclarationVertexState previous;
 
         private TypeDeclarationVertexState(int distance, boolean visited, TypeElement typeElement,
                 DeclaredType declaredType) {
@@ -779,9 +806,8 @@ public abstract class AbstractTypes implements Types {
      *     {@code toRawTypeDeclaration(p.get(p.size() - 1)).equals(base)} are {@code true}. Otherwise, {@code null} to
      *     indicate that there is no such path.
      */
+    @Nullable
     private List<DeclaredType> getShortestPathToSuperType(TypeElement base, DeclaredType derived) {
-        assert base != null && derived != null : "Internal non-null constraint violated.";
-
         TypeElement typeElement = (TypeElement) derived.asElement();
 
         Set<TypeElement> boundary = new LinkedHashSet<>();
@@ -797,7 +823,7 @@ public abstract class AbstractTypes implements Types {
         // - For all visited nodes, the shortest path is known
         while (!boundary.isEmpty()) {
             // shortest := vertex in boundary with smallest distance from typeElement
-            TypeDeclarationVertexState shortest = null;
+            @Nullable TypeDeclarationVertexState shortest = null;
             for (TypeElement currentDeclaration: boundary) {
                 TypeDeclarationVertexState current = dijkstraState.get(currentDeclaration);
                 if (shortest == null || current.distance < shortest.distance) {
@@ -822,7 +848,7 @@ public abstract class AbstractTypes implements Types {
                 // A direct super type of a type declaration is either a non-generic type declaration or a raw type (in
                 // both cases represented as DeclaredType with no actual type parameters) or a parameterized type
                 TypeElement superDeclaration = (TypeElement) superType.asElement();
-                TypeDeclarationVertexState stats = dijkstraState.get(superDeclaration);
+                @Nullable TypeDeclarationVertexState stats = dijkstraState.get(superDeclaration);
 
                 if (stats == null) {
                     stats = new TypeDeclarationVertexState(Integer.MAX_VALUE, false, superDeclaration, superType);
@@ -847,9 +873,9 @@ public abstract class AbstractTypes implements Types {
      */
     private final class ErasureVisitor extends ExtendedTypeKindVisitor7<TypeMirror, Void> {
         @Override
-        public TypeMirror visitDeclared(DeclaredType declaredType, Void ignored) {
+        public TypeMirror visitDeclared(DeclaredType declaredType, @Nullable Void ignored) {
             TypeMirror originalEnclosingType = declaredType.getEnclosingType();
-            DeclaredType newEnclosingType = originalEnclosingType.getKind() == TypeKind.NONE
+            @Nullable DeclaredType newEnclosingType = originalEnclosingType.getKind() == TypeKind.NONE
                 ? null
                 : (DeclaredType) erasure(declaredType.getEnclosingType());
             return getDeclaredType(newEnclosingType, (TypeElement) declaredType.asElement());
@@ -859,7 +885,7 @@ public abstract class AbstractTypes implements Types {
          * Returns the array type corresponding to the erasure of the component type.
          */
         @Override
-        public TypeMirror visitArray(ArrayType arrayType, Void ignored) {
+        public TypeMirror visitArray(ArrayType arrayType, @Nullable Void ignored) {
             return getArrayType(erasure(arrayType.getComponentType()));
         }
 
@@ -871,7 +897,7 @@ public abstract class AbstractTypes implements Types {
          * guaranteed to have see right form (see {@link #visitIntersection(IntersectionType, Void)}).
          */
         @Override
-        public TypeMirror visitTypeVariable(TypeVariable typeVariable, Void ignored) {
+        public TypeMirror visitTypeVariable(TypeVariable typeVariable, @Nullable Void ignored) {
             return erasure(typeVariable.getUpperBound());
         }
 
@@ -883,7 +909,7 @@ public abstract class AbstractTypes implements Types {
          * erasure of an intersection type as the erasure of its left-most type.
          */
         @Override
-        public TypeMirror visitIntersection(IntersectionType intersectionType, Void parameter) {
+        public TypeMirror visitIntersection(IntersectionType intersectionType, @Nullable Void ignored) {
             return erasure(intersectionType.getBounds().get(0));
         }
 
@@ -967,10 +993,8 @@ public abstract class AbstractTypes implements Types {
      * @param originalUpperBound original upper bound of the type parameter
      * @return the greatest lower bound
      */
-    static TypeMirror[] greatestLowerBound(TypeMirror wildcardExtendsBound, TypeMirror originalUpperBound) {
-        assert wildcardExtendsBound != null && originalUpperBound != null;
-
-        TypeMirror[] result = null;
+    private static TypeMirror[] greatestLowerBound(TypeMirror wildcardExtendsBound, TypeMirror originalUpperBound) {
+        @Nullable TypeMirror[] result = null;
         if (originalUpperBound instanceof IntersectionType) {
             IntersectionType originalIntersectionBound = (IntersectionType) originalUpperBound;
             if (originalIntersectionBound.isIntersectionType()) {
@@ -1005,8 +1029,8 @@ public abstract class AbstractTypes implements Types {
         TypeMirror originalUpperBound = originalTypeVariable.getUpperBound();
 
         // Both of the following are denoted B_i in JLS 5.1.10 (in "? extends B_i" and "? super B_i", respectively)
-        TypeMirror wildcardExtendsBound = wildcardArgument.getExtendsBound();
-        TypeMirror wildcardSuperBound = wildcardArgument.getSuperBound();
+        @Nullable TypeMirror wildcardExtendsBound = wildcardArgument.getExtendsBound();
+        @Nullable TypeMirror wildcardSuperBound = wildcardArgument.getSuperBound();
 
         TypeMirror newUpperBound;
         TypeMirror newLowerBound;
@@ -1127,7 +1151,7 @@ public abstract class AbstractTypes implements Types {
      * @throws NullPointerException if any of the first three arguments is null
      */
     protected TypeVariable getTypeVariable(TypeParameterElement typeParameter, TypeMirror upperBound,
-            TypeMirror lowerBound, WildcardType capturedTypeArgument) {
+            TypeMirror lowerBound, @Nullable WildcardType capturedTypeArgument) {
         Objects.requireNonNull(typeParameter);
         Objects.requireNonNull(upperBound);
         Objects.requireNonNull(lowerBound);
@@ -1172,7 +1196,7 @@ public abstract class AbstractTypes implements Types {
      * @throws NullPointerException if {@code typeParameter} is null
      */
     protected abstract TypeVariable createTypeVariable(TypeParameterElement typeParameter,
-        WildcardType capturedTypeArgument);
+        @Nullable WildcardType capturedTypeArgument);
 
     /**
      * Sets the bounds of a type variable previously returned by
@@ -1189,8 +1213,8 @@ public abstract class AbstractTypes implements Types {
      *     {@link #createTypeVariable(TypeParameterElement, WildcardType)}
      * @param upperBound Upper bound for the given type variable. If no explicit upper bound is used, a
      *     {@link DeclaredType} representing {@link Object} will be passed.
-     * @param lowerBound Lower bound for the given type variable. This may a {@link javax.lang.model.type.NullType}
-     *     instance, unless capture conversion produced a type variable with a non-trivial lower bound.
+     * @param lowerBound Lower bound for the given type variable. This may a {@link NullType} instance, unless capture
+     *     conversion produced a type variable with a non-trivial lower bound.
      * @see #createTypeVariable(TypeParameterElement, WildcardType)
      */
     protected abstract void setTypeVariableBounds(TypeVariable typeVariable, TypeMirror upperBound,
@@ -1206,6 +1230,7 @@ public abstract class AbstractTypes implements Types {
      * @param typeVariable the type variable that may be the result of a capture conversion
      * @return the captured wildcard type argument, or null if not applicable
      */
+    @Nullable
     protected abstract WildcardType capturedTypeArgument(TypeVariable typeVariable);
 
     /**
@@ -1220,28 +1245,37 @@ public abstract class AbstractTypes implements Types {
     /**
      * Visitor of {@link TypeMirror} instances that appends the {@link String} representation to the
      * {@link StringBuilder} instance passed as visitor argument.
+     *
+     * <p>This visitor is only used within this class and only on <em>valid</em> {@link TypeMirror} instances. Hence, it
+     * can be asserted that the visitor parameter is always non-null.
+     *
+     * @see #requireValidType(TypeMirror)
      */
     private final class ToStringVisitor extends ExtendedTypeKindVisitor7<Void, StringBuilder> {
         @Override
-        public Void visitPrimitive(PrimitiveType primitiveType, StringBuilder stringBuilder) {
+        public Void visitPrimitive(PrimitiveType primitiveType, @Nullable StringBuilder stringBuilder) {
+            assert stringBuilder != null;
             stringBuilder.append(primitiveType.getKind().toString().toLowerCase());
             return null;
         }
 
         @Override
-        public Void visitNull(NullType nullType, StringBuilder stringBuilder) {
+        public Void visitNull(NullType nullType, @Nullable StringBuilder stringBuilder) {
+            assert stringBuilder != null;
             stringBuilder.append("null");
             return null;
         }
 
         @Override
-        public Void visitNoType(NoType noType, StringBuilder stringBuilder) {
+        public Void visitNoType(NoType noType, @Nullable StringBuilder stringBuilder) {
+            assert stringBuilder != null;
             stringBuilder.append(noType.getKind().toString().toLowerCase());
             return null;
         }
 
         @Override
-        public Void visitDeclared(DeclaredType declaredType, StringBuilder stringBuilder) {
+        public Void visitDeclared(DeclaredType declaredType, @Nullable StringBuilder stringBuilder) {
+            assert stringBuilder != null;
             TypeMirror enclosingType = declaredType.getEnclosingType();
             TypeElement typeElement = (TypeElement) declaredType.asElement();
             if (enclosingType.getKind() == TypeKind.DECLARED) {
@@ -1261,15 +1295,17 @@ public abstract class AbstractTypes implements Types {
         }
 
         @Override
-        public Void visitArray(ArrayType arrayType, StringBuilder stringBuilder) {
+        public Void visitArray(ArrayType arrayType, @Nullable StringBuilder stringBuilder) {
+            assert stringBuilder != null;
             arrayType.getComponentType().accept(this, stringBuilder);
             stringBuilder.append("[]");
             return null;
         }
 
         @Override
-        public Void visitTypeVariable(TypeVariable typeVariable, StringBuilder stringBuilder) {
-            WildcardType capturedTypeArgument = capturedTypeArgument(typeVariable);
+        public Void visitTypeVariable(TypeVariable typeVariable, @Nullable StringBuilder stringBuilder) {
+            assert stringBuilder != null;
+            @Nullable WildcardType capturedTypeArgument = capturedTypeArgument(typeVariable);
             if (capturedTypeArgument != null) {
                 stringBuilder.append("capture<");
                 capturedTypeArgument.accept(this, stringBuilder);
@@ -1281,14 +1317,15 @@ public abstract class AbstractTypes implements Types {
         }
 
         @Override
-        public Void visitWildcard(WildcardType wildcardTypeArgument, StringBuilder stringBuilder) {
+        public Void visitWildcard(WildcardType wildcardTypeArgument, @Nullable StringBuilder stringBuilder) {
+            assert stringBuilder != null;
             stringBuilder.append('?');
-            TypeMirror extendsBound = wildcardTypeArgument.getExtendsBound();
+            @Nullable TypeMirror extendsBound = wildcardTypeArgument.getExtendsBound();
             if (extendsBound != null) {
                 stringBuilder.append(" extends ");
                 extendsBound.accept(this, stringBuilder);
             }
-            TypeMirror superBound = wildcardTypeArgument.getSuperBound();
+            @Nullable TypeMirror superBound = wildcardTypeArgument.getSuperBound();
             if (superBound != null) {
                 stringBuilder.append(" super ");
                 superBound.accept(this, stringBuilder);
@@ -1297,13 +1334,14 @@ public abstract class AbstractTypes implements Types {
         }
 
         @Override
-        public Void visitIntersection(IntersectionType intersectionType, StringBuilder stringBuilder) {
+        public Void visitIntersection(IntersectionType intersectionType, @Nullable StringBuilder stringBuilder) {
+            assert stringBuilder != null;
             appendList(stringBuilder, intersectionType.getBounds(), " & ");
             return null;
         }
 
         private void appendList(StringBuilder stringBuilder, List<? extends TypeMirror> types, String glue) {
-            assert stringBuilder != null && types != null && !types.isEmpty() && glue != null;
+            assert !types.isEmpty();
 
             boolean first = true;
             for (TypeMirror type: types) {

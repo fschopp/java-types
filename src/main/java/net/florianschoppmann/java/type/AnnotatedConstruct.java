@@ -1,5 +1,6 @@
 package net.florianschoppmann.java.type;
 
+import javax.annotation.Nullable;
 import javax.lang.model.element.AnnotationMirror;
 import java.lang.annotation.Annotation;
 import java.util.List;
@@ -32,6 +33,7 @@ public interface AnnotatedConstruct {
      * @param annotationType the {@code Class} object corresponding to the annotation type
      * @return this construct's annotation for the specified annotation type if present, else {@code null}
      */
+    @Nullable
     <A extends Annotation> A getAnnotation(Class<A> annotationType);
 
     /**

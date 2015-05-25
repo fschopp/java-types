@@ -1,5 +1,6 @@
 package net.florianschoppmann.java.reflect;
 
+import javax.annotation.Nullable;
 import javax.lang.model.type.PrimitiveType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeVisitor;
@@ -26,7 +27,7 @@ final class PrimitiveTypeImpl extends AnnotatedConstructImpl implements Reflecti
     }
 
     @Override
-    public <R, P> R accept(TypeVisitor<R, P> visitor, P parameter) {
+    public <R, P> R accept(TypeVisitor<R, P> visitor, @Nullable P parameter) {
         return visitor.visitPrimitive(this, parameter);
     }
 

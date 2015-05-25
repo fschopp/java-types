@@ -1,5 +1,6 @@
 package net.florianschoppmann.java.reflect;
 
+import javax.annotation.Nullable;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeVisitor;
@@ -15,7 +16,7 @@ final class ArrayTypeImpl extends AnnotatedConstructImpl implements ReflectionTy
     }
 
     @Override
-    public boolean equals(Object otherObject) {
+    public boolean equals(@Nullable Object otherObject) {
         if (this == otherObject) {
             return true;
         } else if (otherObject == null || getClass() != otherObject.getClass()) {
@@ -38,7 +39,7 @@ final class ArrayTypeImpl extends AnnotatedConstructImpl implements ReflectionTy
     }
 
     @Override
-    public <R, P> R accept(TypeVisitor<R, P> visitor, P parameter) {
+    public <R, P> R accept(TypeVisitor<R, P> visitor, @Nullable P parameter) {
         return visitor.visitArray(this, parameter);
     }
 

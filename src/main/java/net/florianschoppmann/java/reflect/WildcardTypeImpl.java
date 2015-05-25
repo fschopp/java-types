@@ -1,5 +1,6 @@
 package net.florianschoppmann.java.reflect;
 
+import javax.annotation.Nullable;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeVisitor;
 import javax.lang.model.type.WildcardType;
@@ -9,20 +10,20 @@ final class WildcardTypeImpl extends AnnotatedConstructImpl implements Reflectio
     /**
      * Upper bound of this wildcard. If no upper bound is explicitly declared, this field contains {@code null}.
      */
-    private final ReflectionTypeMirror extendsBound;
+    @Nullable private final ReflectionTypeMirror extendsBound;
 
     /**
      * Lower bound of this wildcard. If no lower bound is explicitly declared, this field contains {@code null}.
      */
-    private final ReflectionTypeMirror superBound;
+    @Nullable private final ReflectionTypeMirror superBound;
 
-    WildcardTypeImpl(ReflectionTypeMirror extendsBound, ReflectionTypeMirror superBound) {
+    WildcardTypeImpl(@Nullable ReflectionTypeMirror extendsBound, @Nullable ReflectionTypeMirror superBound) {
         this.extendsBound = extendsBound;
         this.superBound = superBound;
     }
 
     @Override
-    public boolean equals(Object otherObject) {
+    public boolean equals(@Nullable Object otherObject) {
         if (this == otherObject) {
             return true;
         } else if (otherObject == null || getClass() != otherObject.getClass()) {
@@ -45,16 +46,18 @@ final class WildcardTypeImpl extends AnnotatedConstructImpl implements Reflectio
     }
 
     @Override
-    public <R, P> R accept(TypeVisitor<R, P> visitor, P parameter) {
+    public <R, P> R accept(TypeVisitor<R, P> visitor, @Nullable P parameter) {
         return visitor.visitWildcard(this, parameter);
     }
 
     @Override
+    @Nullable
     public ReflectionTypeMirror getExtendsBound() {
         return extendsBound;
     }
 
     @Override
+    @Nullable
     public ReflectionTypeMirror getSuperBound() {
         return superBound;
     }

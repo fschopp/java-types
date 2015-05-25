@@ -2,6 +2,7 @@ package net.florianschoppmann.java.reflect;
 
 import net.florianschoppmann.java.type.IntersectionType;
 
+import javax.annotation.Nullable;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.TypeVisitor;
@@ -18,7 +19,7 @@ final class IntersectionTypeImpl extends AnnotatedConstructImpl implements Inter
     }
 
     @Override
-    public boolean equals(Object otherObject) {
+    public boolean equals(@Nullable Object otherObject) {
         if (this == otherObject) {
             return true;
         } else if (otherObject == null || getClass() != otherObject.getClass()) {
@@ -41,7 +42,7 @@ final class IntersectionTypeImpl extends AnnotatedConstructImpl implements Inter
     }
 
     @Override
-    public <R, P> R accept(TypeVisitor<R, P> visitor, P parameter) {
+    public <R, P> R accept(TypeVisitor<R, P> visitor, @Nullable P parameter) {
         return visitor.visitUnknown(this, parameter);
     }
 

@@ -1,0 +1,11 @@
+<root>
+  <item name='java.lang.reflect.InvocationHandler java.lang.Object invoke(java.lang.Object, java.lang.reflect.Method, java.lang.Object[]) 0'>
+    <annotation name='javax.annotation.Nonnull'/>
+  </item>
+  <item name='java.lang.reflect.InvocationHandler java.lang.Object invoke(java.lang.Object, java.lang.reflect.Method, java.lang.Object[]) 1'>
+    <annotation name='javax.annotation.Nonnull'/>
+  </item>
+  <item name='java.lang.reflect.InvocationHandler java.lang.Object invoke(java.lang.Object, java.lang.reflect.Method, java.lang.Object[]) 2'>
+    <annotation name='javax.annotation.Nonnull'/>
+  </item>
+</root>

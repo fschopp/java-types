@@ -1,0 +1,98 @@
+<root>
+    <item name='javax.lang.model.util.AbstractTypeVisitor6 R visitUnknown(javax.lang.model.type.TypeMirror, P) 0'>
+        <annotation name='javax.annotation.Nonnull'/>
+    </item>
+    <item name='javax.lang.model.util.SimpleTypeVisitor6 R defaultAction(javax.lang.model.type.TypeMirror, P) 0'>
+        <annotation name='javax.annotation.Nonnull'/>
+    </item>
+    <item name='javax.lang.model.util.SimpleTypeVisitor6 R visitArray(javax.lang.model.type.ArrayType, P) 0'>
+        <annotation name='javax.annotation.Nonnull'/>
+    </item>
+    <item name='javax.lang.model.util.SimpleTypeVisitor6 R visitDeclared(javax.lang.model.type.DeclaredType, P) 0'>
+        <annotation name='javax.annotation.Nonnull'/>
+    </item>
+    <item name='javax.lang.model.util.SimpleTypeVisitor6 R visitNull(javax.lang.model.type.NullType, P) 0'>
+        <annotation name='javax.annotation.Nonnull'/>
+    </item>
+    <item name='javax.lang.model.util.SimpleTypeVisitor6 R visitTypeVariable(javax.lang.model.type.TypeVariable, P) 0'>
+        <annotation name='javax.annotation.Nonnull'/>
+    </item>
+    <item name='javax.lang.model.util.SimpleTypeVisitor6 R visitWildcard(javax.lang.model.type.WildcardType, P) 0'>
+        <annotation name='javax.annotation.Nonnull'/>
+    </item>
+    <item name='javax.lang.model.util.Types boolean contains(javax.lang.model.type.TypeMirror, javax.lang.model.type.TypeMirror) 0'>
+        <annotation name='javax.annotation.Nonnull'/>
+    </item>
+    <item name='javax.lang.model.util.Types boolean contains(javax.lang.model.type.TypeMirror, javax.lang.model.type.TypeMirror) 1'>
+        <annotation name='javax.annotation.Nonnull'/>
+    </item>
+    <item name='javax.lang.model.util.Types boolean isAssignable(javax.lang.model.type.TypeMirror, javax.lang.model.type.TypeMirror) 0'>
+        <annotation name='javax.annotation.Nonnull'/>
+    </item>
+    <item name='javax.lang.model.util.Types boolean isAssignable(javax.lang.model.type.TypeMirror, javax.lang.model.type.TypeMirror) 1'>
+        <annotation name='javax.annotation.Nonnull'/>
+    </item>
+    <item name='javax.lang.model.util.Types boolean isSameType(javax.lang.model.type.TypeMirror, javax.lang.model.type.TypeMirror) 0'>
+        <annotation name='javax.annotation.Nonnull'/>
+    </item>
+    <item name='javax.lang.model.util.Types boolean isSameType(javax.lang.model.type.TypeMirror, javax.lang.model.type.TypeMirror) 1'>
+        <annotation name='javax.annotation.Nonnull'/>
+    </item>
+    <item name='javax.lang.model.util.Types boolean isSubsignature(javax.lang.model.type.ExecutableType, javax.lang.model.type.ExecutableType) 0'>
+        <annotation name='javax.annotation.Nonnull'/>
+    </item>
+    <item name='javax.lang.model.util.Types boolean isSubsignature(javax.lang.model.type.ExecutableType, javax.lang.model.type.ExecutableType) 1'>
+        <annotation name='javax.annotation.Nonnull'/>
+    </item>
+    <item name='javax.lang.model.util.Types boolean isSubtype(javax.lang.model.type.TypeMirror, javax.lang.model.type.TypeMirror) 0'>
+        <annotation name='javax.annotation.Nonnull'/>
+    </item>
+    <item name='javax.lang.model.util.Types boolean isSubtype(javax.lang.model.type.TypeMirror, javax.lang.model.type.TypeMirror) 1'>
+        <annotation name='javax.annotation.Nonnull'/>
+    </item>
+    <item name='javax.lang.model.util.Types java.util.List&lt;? extends javax.lang.model.type.TypeMirror&gt; directSupertypes(javax.lang.model.type.TypeMirror) 0'>
+        <annotation name='javax.annotation.Nonnull'/>
+    </item>
+    <item name='javax.lang.model.util.Types javax.lang.model.element.Element asElement(javax.lang.model.type.TypeMirror) 0'>
+        <annotation name='javax.annotation.Nonnull'/>
+    </item>
+    <item name='javax.lang.model.util.Types javax.lang.model.element.TypeElement boxedClass(javax.lang.model.type.PrimitiveType) 0'>
+        <annotation name='javax.annotation.Nonnull'/>
+    </item>
+    <item name='javax.lang.model.util.Types javax.lang.model.type.ArrayType getArrayType(javax.lang.model.type.TypeMirror) 0'>
+        <annotation name='javax.annotation.Nonnull'/>
+    </item>
+    <item name='javax.lang.model.util.Types javax.lang.model.type.DeclaredType getDeclaredType(javax.lang.model.element.TypeElement, javax.lang.model.type.TypeMirror...) 0'>
+        <annotation name='javax.annotation.Nonnull'/>
+    </item>
+    <item name='javax.lang.model.util.Types javax.lang.model.type.DeclaredType getDeclaredType(javax.lang.model.element.TypeElement, javax.lang.model.type.TypeMirror...) 1'>
+        <annotation name='javax.annotation.Nonnull'/>
+    </item>
+    <item name='javax.lang.model.util.Types javax.lang.model.type.DeclaredType getDeclaredType(javax.lang.model.type.DeclaredType, javax.lang.model.element.TypeElement, javax.lang.model.type.TypeMirror...) 1'>
+        <annotation name='javax.annotation.Nonnull'/>
+    </item>
+    <item name='javax.lang.model.util.Types javax.lang.model.type.DeclaredType getDeclaredType(javax.lang.model.type.DeclaredType, javax.lang.model.element.TypeElement, javax.lang.model.type.TypeMirror...) 2'>
+        <annotation name='javax.annotation.Nonnull'/>
+    </item>
+    <item name='javax.lang.model.util.Types javax.lang.model.type.NoType getNoType(javax.lang.model.type.TypeKind) 0'>
+        <annotation name='javax.annotation.Nonnull'/>
+    </item>
+    <item name='javax.lang.model.util.Types javax.lang.model.type.PrimitiveType getPrimitiveType(javax.lang.model.type.TypeKind) 0'>
+      <annotation name='javax.annotation.Nonnull'/>
+    </item>
+    <item name='javax.lang.model.util.Types javax.lang.model.type.PrimitiveType unboxedType(javax.lang.model.type.TypeMirror) 0'>
+        <annotation name='javax.annotation.Nonnull'/>
+    </item>
+    <item name='javax.lang.model.util.Types javax.lang.model.type.TypeMirror asMemberOf(javax.lang.model.type.DeclaredType, javax.lang.model.element.Element) 0'>
+        <annotation name='javax.annotation.Nonnull'/>
+    </item>
+    <item name='javax.lang.model.util.Types javax.lang.model.type.TypeMirror asMemberOf(javax.lang.model.type.DeclaredType, javax.lang.model.element.Element) 1'>
+        <annotation name='javax.annotation.Nonnull'/>
+    </item>
+    <item name='javax.lang.model.util.Types javax.lang.model.type.TypeMirror capture(javax.lang.model.type.TypeMirror) 0'>
+        <annotation name='javax.annotation.Nonnull'/>
+    </item>
+    <item name='javax.lang.model.util.Types javax.lang.model.type.TypeMirror erasure(javax.lang.model.type.TypeMirror) 0'>
+        <annotation name='javax.annotation.Nonnull'/>
+    </item>
+</root>

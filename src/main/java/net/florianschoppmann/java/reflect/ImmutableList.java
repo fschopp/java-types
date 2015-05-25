@@ -1,5 +1,6 @@
 package net.florianschoppmann.java.reflect;
 
+import javax.annotation.Nullable;
 import java.util.AbstractList;
 import java.util.List;
 
@@ -9,8 +10,6 @@ final class ImmutableList<E> extends AbstractList<E> {
     private final Object[] array;
 
     private ImmutableList(Object[] array) {
-        assert array != null;
-
         this.array = array;
     }
 
@@ -28,6 +27,7 @@ final class ImmutableList<E> extends AbstractList<E> {
     }
 
     @Override
+    @Nullable
     @SuppressWarnings("unchecked")
     public E get(int index) {
         return (E) array[index];

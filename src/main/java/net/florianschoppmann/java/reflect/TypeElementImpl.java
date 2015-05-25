@@ -1,5 +1,6 @@
 package net.florianschoppmann.java.reflect;
 
+import javax.annotation.Nullable;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ElementVisitor;
 import javax.lang.model.element.Name;
@@ -15,10 +16,10 @@ import java.util.Objects;
 final class TypeElementImpl extends ElementImpl implements TypeElement, ReflectionParameterizable {
     private final Class<?> clazz;
     private final ImmutableList<TypeParameterElementImpl> typeParameters;
-    private ReflectionElement enclosingElement;
-    private ReflectionTypeMirror superClass;
-    private List<ReflectionTypeMirror> interfaces;
-    private List<ElementImpl> enclosedElements;
+    @Nullable private ReflectionElement enclosingElement;
+    @Nullable private ReflectionTypeMirror superClass;
+    @Nullable private List<ReflectionTypeMirror> interfaces;
+    @Nullable private List<ElementImpl> enclosedElements;
 
     /**
      * Cache the type returned by {@link #asType()}.
@@ -29,7 +30,7 @@ final class TypeElementImpl extends ElementImpl implements TypeElement, Reflecti
      * atomic, regardless of whether they are implemented as 32-bit or 64-bit values". Hence, even if caches were
      * updated, every access to this field would yield a well-defined result.
      */
-    private DeclaredTypeImpl type;
+    @Nullable private DeclaredTypeImpl type;
 
     TypeElementImpl(Class<?> clazz) {
         this.clazz = Objects.requireNonNull(clazz);
@@ -42,7 +43,7 @@ final class TypeElementImpl extends ElementImpl implements TypeElement, Reflecti
     }
 
     @Override
-    public boolean equals(Object otherObject) {
+    public boolean equals(@Nullable Object otherObject) {
         if (this == otherObject) {
             return true;
         } else if (otherObject == null || getClass() != otherObject.getClass()) {
@@ -63,14 +64,14 @@ final class TypeElementImpl extends ElementImpl implements TypeElement, Reflecti
     }
 
     @Override
-    public <R, P> R accept(ElementVisitor<R, P> visitor, P parameter) {
+    public <R, P> R accept(ElementVisitor<R, P> visitor, @Nullable P parameter) {
         return visitor.visitType(this, parameter);
     }
 
     @Override
     public List<ElementImpl> getEnclosedElements() {
         requireFinished();
-
+        assert enclosedElements != null : "must be non-null when finished";
         return enclosedElements;
     }
 
@@ -94,14 +95,14 @@ final class TypeElementImpl extends ElementImpl implements TypeElement, Reflecti
     @Override
     public TypeMirror getSuperclass() {
         requireFinished();
-
+        assert superClass != null : "must be non-null when finished";
         return superClass;
     }
 
     @Override
     public List<? extends TypeMirror> getInterfaces() {
         requireFinished();
-
+        assert interfaces != null : "must be non-null when finished";
         return interfaces;
     }
 
@@ -125,7 +126,7 @@ final class TypeElementImpl extends ElementImpl implements TypeElement, Reflecti
     public DeclaredTypeImpl asType() {
         requireFinished();
 
-        DeclaredTypeImpl localType = type;
+        @Nullable DeclaredTypeImpl localType = type;
         if (localType == null) {
             List<TypeVariableImpl> prototypicalTypeArguments = new ArrayList<>(typeParameters.size());
             for (TypeParameterElementImpl typeParameter: typeParameters) {
@@ -156,7 +157,7 @@ final class TypeElementImpl extends ElementImpl implements TypeElement, Reflecti
 
     @Override
     protected void finishDerivedFromElement(MirrorContext mirrorContext) {
-        Class<?> enclosingClass = clazz.getEnclosingClass();
+        @Nullable Class<?> enclosingClass = clazz.getEnclosingClass();
         enclosingElement = enclosingClass == null
             ? null
             : mirrorContext.typeDeclaration(enclosingClass);
@@ -169,7 +170,7 @@ final class TypeElementImpl extends ElementImpl implements TypeElement, Reflecti
         }
         enclosedElements = ImmutableList.copyOf(newEnclosedElements);
 
-        Type genericSuperClass = clazz.getGenericSuperclass();
+        @Nullable Type genericSuperClass = clazz.getGenericSuperclass();
         superClass = genericSuperClass == null
             ? NoTypeImpl.NONE
             : mirrorContext.mirror(genericSuperClass);

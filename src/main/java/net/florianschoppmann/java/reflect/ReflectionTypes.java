@@ -1,9 +1,9 @@
 package net.florianschoppmann.java.reflect;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.florianschoppmann.java.type.AbstractTypes;
 import net.florianschoppmann.java.type.IntersectionType;
 
+import javax.annotation.Nullable;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
@@ -37,17 +37,17 @@ import java.util.Objects;
  * Likewise, only a stateless (and thus thread-safe) singleton instance of this class is available via
  * {@link #getInstance()}.
  *
- * <p>Currently unsupported are (resulting in an {@link java.lang.UnsupportedOperationException}):
+ * <p>Currently unsupported are (resulting in an {@link UnsupportedOperationException}):
  * <ul><li>
  *     Type parameters in method declarations. See {@link #typeMirror(Type)} for details.
  * </li><li>
  *     {@link #directSupertypes(TypeMirror)}
  * </li><li>
- *     {@link #asMemberOf(javax.lang.model.type.DeclaredType, javax.lang.model.element.Element)}
+ *     {@link #asMemberOf(DeclaredType, Element)}
  * </li><li>
  *     {@link #isAssignable(TypeMirror, TypeMirror)}
  * </li><li>
- *     {@link #isSubsignature(javax.lang.model.type.ExecutableType, javax.lang.model.type.ExecutableType)}
+ *     {@link #isSubsignature(ExecutableType, ExecutableType)}
  * </li></ul>
  */
 public final class ReflectionTypes extends AbstractTypes {
@@ -100,7 +100,7 @@ public final class ReflectionTypes extends AbstractTypes {
     }
 
     @Override
-    protected void requireValidType(TypeMirror type) {
+    protected void requireValidType(@Nullable TypeMirror type) {
         if (!(type instanceof ReflectionTypeMirror) && type != null) {
             throw new IllegalArgumentException(String.format(
                 "Expected %s instance that was created by %s, but got instance of %s.",
@@ -109,16 +109,18 @@ public final class ReflectionTypes extends AbstractTypes {
         }
     }
 
-    private void addPrimitive(List<PrimitiveTypeImpl> newPrimitiveTypes,
-        List<TypeElementImpl> newBoxedTypeDeclarations, TypeKind kind, PrimitiveTypeImpl primitiveType,
-        Class<?> clazz) {
+    private void addPrimitive(List<PrimitiveTypeImpl> newPrimitiveTypes, List<TypeElementImpl> newBoxedTypeDeclarations,
+            TypeKind kind, PrimitiveTypeImpl primitiveType, Class<?> clazz) {
         newPrimitiveTypes.set(kind.ordinal(), primitiveType);
         newBoxedTypeDeclarations.set(kind.ordinal(), ((DeclaredTypeImpl) typeMirror(clazz)).asElement());
     }
 
     @Override
     public TypeElement boxedClass(PrimitiveType primitiveType) {
-        return boxedTypeDeclarations.get(primitiveType.getKind().ordinal());
+        requireValidType(Objects.requireNonNull(primitiveType));
+        @Nullable TypeElementImpl typeElement = boxedTypeDeclarations.get(primitiveType.getKind().ordinal());
+        assert typeElement != null : "Array with boxed type declarations incorrectly initialized.";
+        return typeElement;
     }
 
     @Override
@@ -163,7 +165,7 @@ public final class ReflectionTypes extends AbstractTypes {
             return (ReflectionTypeMirror) getPrimitiveType(TypeKind.valueOf(clazz.getName().toUpperCase()));
         } else {
             // raw type
-            Class<?> enclosingClass = clazz.getEnclosingClass();
+            @Nullable Class<?> enclosingClass = clazz.getEnclosingClass();
             ReflectionTypeMirror enclosingType = enclosingClass == null
                 ? NoTypeImpl.NONE
                 : mirrorContext.mirror(enclosingClass);
@@ -179,7 +181,7 @@ public final class ReflectionTypes extends AbstractTypes {
             MirrorContext mirrorContext) {
         Class<?> rawClass = (Class<?>) parameterizedType.getRawType();
         TypeElementImpl typeDeclaration = mirrorContext.typeDeclaration(rawClass);
-        Type ownerType = parameterizedType.getOwnerType();
+        @Nullable Type ownerType = parameterizedType.getOwnerType();
         ReflectionTypeMirror ownerTypeMirror = ownerType == null
             ? NoTypeImpl.NONE
             : mirrorContext.mirror(ownerType);
@@ -192,11 +194,11 @@ public final class ReflectionTypes extends AbstractTypes {
      *
      * <p>The following preconditions are guaranteed by the JLS and the JavaDoc of package {@link java.lang.reflect}:
      * <ul><li>
-     *     {@link java.lang.reflect.WildcardType#getUpperBounds()} specifies: "Note that if no upper bound is explicitly
+     *     {@link WildcardType#getUpperBounds()} specifies: "Note that if no upper bound is explicitly
      *     declared, the upper bound is {@code Object}."
      * </li><li>
-     *     While {@link java.lang.reflect.WildcardType#getUpperBounds()} and
-     *     {@link java.lang.reflect.WildcardType#getLowerBounds()} return an arrays, JLS §4.5.1 (at least up to
+     *     While {@link WildcardType#getUpperBounds()} and
+     *     {@link WildcardType#getLowerBounds()} return an arrays, JLS §4.5.1 (at least up to
      *     version 8) only supports a single ReferenceType for both bounds.
      * </li></ul>
      */
@@ -208,14 +210,14 @@ public final class ReflectionTypes extends AbstractTypes {
         assert upperBounds.length == 1 && lowerBounds.length <= 1
             && (lowerBounds.length == 0 || Object.class.equals(upperBounds[0]));
 
-        ReflectionTypeMirror extendsBounds;
+        @Nullable ReflectionTypeMirror extendsBounds;
         if (Object.class.equals(upperBounds[0])) {
             extendsBounds = null;
         } else {
             extendsBounds = mirrorContext.mirror(upperBounds[0]);
         }
 
-        ReflectionTypeMirror superBound;
+        @Nullable ReflectionTypeMirror superBound;
         if (lowerBounds.length == 0) {
             superBound = null;
         } else {
@@ -230,12 +232,11 @@ public final class ReflectionTypes extends AbstractTypes {
         }
     }
 
-    @SuppressFBWarnings(value = "NP_NULL_ON_SOME_PATH", justification = "requireCondition() asserts non-null")
     private static TypeVariableImpl mirrorTypeVariable(TypeVariable<?> typeVariable, MirrorContext mirrorContext) {
         GenericDeclaration genericDeclaration = typeVariable.getGenericDeclaration();
         if (genericDeclaration instanceof Class<?>) {
             TypeElementImpl typeDeclaration = mirrorContext.typeDeclaration((Class<?>) genericDeclaration);
-            TypeParameterElementImpl element = null;
+            @Nullable TypeParameterElementImpl element = null;
             for (TypeParameterElementImpl typeParameter: typeDeclaration.getTypeParameters()) {
                 if (typeParameter.getSimpleName().contentEquals(typeVariable.getName())) {
                     element = typeParameter;
@@ -244,6 +245,7 @@ public final class ReflectionTypes extends AbstractTypes {
             }
             requireCondition(element != null,
                 "Could not find the type-parameter element that corresponds to type variable %s.", typeVariable);
+            assert element != null : "redundant check for FindBugs";
             return element.asType();
         } else {
             throw new UnsupportedOperationException("Method or constructor type parameters not supported.");
@@ -251,7 +253,7 @@ public final class ReflectionTypes extends AbstractTypes {
     }
 
     ReflectionTypeMirror mirrorInternal(Type type, MirrorContext mirrorContext) {
-        ReflectionTypeMirror typeMirror = null;
+        @Nullable ReflectionTypeMirror typeMirror = null;
         if (type instanceof Class<?>) {
             typeMirror = mirrorClass((Class<?>) type, mirrorContext);
         } else if (type instanceof ParameterizedType) {
@@ -268,6 +270,7 @@ public final class ReflectionTypes extends AbstractTypes {
         requireCondition(typeMirror != null,
             "Expected Class, ParameterizedType, GenericArrayType, WildcardType, or TypeVariable instance, but got %s.",
             type);
+        assert typeMirror != null : "redundant check for FindBugs";
         return typeMirror;
     }
 
@@ -278,7 +281,7 @@ public final class ReflectionTypes extends AbstractTypes {
      * @return type element corresponding to the given {@link Class} object
      * @throws IllegalArgumentException if the given class represents a primitive or array type
      * @throws UnsupportedOperationException if a generic declaration is referenced that is not of type {@link Class},
-     *     see {@link #typeMirror(java.lang.reflect.Type)} for details
+     *     see {@link #typeMirror(Type)} for details
      */
     public TypeElement typeElement(Class<?> clazz) {
         if (clazz.isArray() || clazz.isPrimitive()) {
@@ -292,8 +295,8 @@ public final class ReflectionTypes extends AbstractTypes {
      * Returns a type mirror corresponding to the given Java reflection type.
      *
      * <p>Type parameters in method declarations are not currently supported. That is, if the given type references a
-     * {@link java.lang.reflect.TypeVariable} instance that has a {@link java.lang.reflect.Constructor} or
-     * {@link java.lang.reflect.Method} as generic declaration, an {@link java.lang.UnsupportedOperationException}
+     * {@link TypeVariable} instance that has a {@link java.lang.reflect.Constructor} or
+     * {@link java.lang.reflect.Method} as generic declaration, an {@link UnsupportedOperationException}
      * will be thrown.
      *
      * @param type type as represented by Java Reflection API
@@ -327,8 +330,8 @@ public final class ReflectionTypes extends AbstractTypes {
     }
 
     @Override
-    public DeclaredType getDeclaredType(DeclaredType containing, TypeElement typeElem, TypeMirror... typeArgs) {
-        // Note that containing may be null
+    public DeclaredType getDeclaredType(@Nullable DeclaredType containing, TypeElement typeElem,
+            TypeMirror... typeArgs) {
         requireValidType(containing);
         requireValidElement(typeElem);
         requireValidTypes(typeArgs);
@@ -375,8 +378,7 @@ public final class ReflectionTypes extends AbstractTypes {
 
     @Override
     protected javax.lang.model.type.TypeVariable createTypeVariable(TypeParameterElement typeParameter,
-        javax.lang.model.type.WildcardType capturedTypeArgument) {
-
+            @Nullable javax.lang.model.type.WildcardType capturedTypeArgument) {
         requireValidElement(Objects.requireNonNull(typeParameter));
         requireValidType(capturedTypeArgument);
 
@@ -408,8 +410,7 @@ public final class ReflectionTypes extends AbstractTypes {
 
     @Override
     protected void setTypeVariableBounds(javax.lang.model.type.TypeVariable typeVariable, TypeMirror upperBound,
-        TypeMirror lowerBound) {
-
+            TypeMirror lowerBound) {
         requireValidType(Objects.requireNonNull(typeVariable));
         requireValidType(Objects.requireNonNull(upperBound));
         requireValidType(Objects.requireNonNull(lowerBound));
@@ -422,7 +423,7 @@ public final class ReflectionTypes extends AbstractTypes {
 
     @Override
     public PrimitiveType getPrimitiveType(TypeKind kind) {
-        PrimitiveTypeImpl primitiveType = primitiveTypes.get(kind.ordinal());
+        @Nullable PrimitiveTypeImpl primitiveType = primitiveTypes.get(kind.ordinal());
         if (primitiveType == null) {
             throw new IllegalArgumentException(String.format("Expected primitive kind, but got %s.", kind));
         }
@@ -430,8 +431,8 @@ public final class ReflectionTypes extends AbstractTypes {
     }
 
     @Override
-    public javax.lang.model.type.WildcardType getWildcardType(TypeMirror extendsBound, TypeMirror superBound) {
-        // Note that extendsBound and superBound are allowed to be null.
+    public javax.lang.model.type.WildcardType getWildcardType(@Nullable TypeMirror extendsBound,
+            @Nullable TypeMirror superBound) {
         requireValidType(extendsBound);
         requireValidType(superBound);
 
@@ -460,8 +461,6 @@ public final class ReflectionTypes extends AbstractTypes {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws UnsupportedOperationException whenever this method is called
      */
     @Override

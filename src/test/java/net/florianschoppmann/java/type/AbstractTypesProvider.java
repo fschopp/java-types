@@ -16,14 +16,14 @@ public interface AbstractTypesProvider {
     void preContract();
 
     /**
-     * Puts {@link javax.lang.model.element.TypeElement} instances into the given map (corresponding to the
-     * {@link Class} keys) and returns a {@link AbstractTypes} instance.
+     * Puts {@link TypeElement} instances into the given map (corresponding to the {@link Class} keys) and returns a
+     * {@link AbstractTypes} instance.
      *
-     * <p>Implementations of this method must put a {@link javax.lang.model.element.TypeElement} instance for each
-     * {@link Class} key into the given map. Implementations must not add or remove entries to/from the given map.
+     * <p>Implementations of this method must put a {@link TypeElement} instance for each {@link Class} key into the
+     * given map. Implementations must not add or remove entries to/from the given map.
      *
      * @param classTypeElementMap Map with {@link Class} objects as keys. The value for each key is initially undefined
-     *     and must be updated with the respective {@link javax.lang.model.element.TypeElement} upon return.
+     *     and must be updated with the respective {@link TypeElement} upon return.
      * @return the {@link AbstractTypes} instance that will be used for the contract test
      */
     AbstractTypes getTypes(Map<Class<?>, TypeElement> classTypeElementMap);

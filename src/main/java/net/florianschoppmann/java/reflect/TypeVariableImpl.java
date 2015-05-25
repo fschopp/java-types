@@ -1,5 +1,6 @@
 package net.florianschoppmann.java.reflect;
 
+import javax.annotation.Nullable;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeVariable;
 import javax.lang.model.type.TypeVisitor;
@@ -9,11 +10,11 @@ final class TypeVariableImpl extends AnnotatedConstructImpl implements Reflectio
     private boolean frozen = false;
 
     private final TypeParameterElementImpl typeParameterElement;
-    private final WildcardTypeImpl capturedTypeArgument;
-    private ReflectionTypeMirror upperBound;
-    private ReflectionTypeMirror lowerBound;
+    @Nullable private final WildcardTypeImpl capturedTypeArgument;
+    @Nullable private ReflectionTypeMirror upperBound;
+    @Nullable private ReflectionTypeMirror lowerBound;
 
-    TypeVariableImpl(TypeParameterElementImpl typeParameterElement, WildcardTypeImpl capturedTypeArgument) {
+    TypeVariableImpl(TypeParameterElementImpl typeParameterElement, @Nullable WildcardTypeImpl capturedTypeArgument) {
         Objects.requireNonNull(typeParameterElement);
 
         this.typeParameterElement = typeParameterElement;
@@ -21,7 +22,7 @@ final class TypeVariableImpl extends AnnotatedConstructImpl implements Reflectio
     }
 
     @Override
-    public boolean equals(Object otherObject) {
+    public boolean equals(@Nullable Object otherObject) {
         if (this == otherObject) {
             return true;
         } else if (otherObject == null || getClass() != otherObject.getClass()) {
@@ -29,6 +30,7 @@ final class TypeVariableImpl extends AnnotatedConstructImpl implements Reflectio
         }
 
         requireFrozen();
+        assert upperBound != null && lowerBound != null : "must be non-null when frozen";
 
         TypeVariableImpl other = (TypeVariableImpl) otherObject;
         return typeParameterElement.equals(other.typeParameterElement)
@@ -45,7 +47,7 @@ final class TypeVariableImpl extends AnnotatedConstructImpl implements Reflectio
     }
 
     @Override
-    public <R, P> R accept(TypeVisitor<R, P> visitor, P parameter) {
+    public <R, P> R accept(TypeVisitor<R, P> visitor, @Nullable P parameter) {
         return visitor.visitTypeVariable(this, parameter);
     }
 
@@ -78,14 +80,14 @@ final class TypeVariableImpl extends AnnotatedConstructImpl implements Reflectio
     @Override
     public ReflectionTypeMirror getUpperBound() {
         requireFrozen();
-
+        assert upperBound != null : "must be non-null when frozen";
         return upperBound;
     }
 
     @Override
     public ReflectionTypeMirror getLowerBound() {
         requireFrozen();
-
+        assert lowerBound != null : "must be non-null when frozen";
         return lowerBound;
     }
 
@@ -104,6 +106,7 @@ final class TypeVariableImpl extends AnnotatedConstructImpl implements Reflectio
         return TypeKind.TYPEVAR;
     }
 
+    @Nullable
     WildcardTypeImpl getCapturedTypeArgument() {
         return capturedTypeArgument;
     }

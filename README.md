@@ -43,6 +43,7 @@ plus concrete realization backed by core Java Reflection API, akin to
   and
   [`VariableElement`](http://docs.oracle.com/javase/8/docs/api/javax/lang/model/element/VariableElement.html))
   not currently implemented
+- Code makes use of JSR 305 annotations (e.g., `@Nullable`)
 
 ## License
 
@@ -56,7 +57,7 @@ Published releases (compiled for Java 7 and up) are available on Maven Central.
 <dependency>
     <groupId>net.florianschoppmann.java</groupId>
     <artifactId>java-types</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 </dependency>
 ```
 

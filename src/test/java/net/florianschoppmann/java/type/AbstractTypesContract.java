@@ -227,7 +227,7 @@ public final class AbstractTypesContract implements ITest {
     }
 
     /**
-     * Verifies that {@link AbstractTypes#requireValidType(javax.lang.model.type.TypeMirror)} does not throw an
+     * Verifies that {@link AbstractTypes#requireValidType(TypeMirror)} does not throw an
      * exception if passed null.
      */
     @Test
@@ -236,7 +236,7 @@ public final class AbstractTypesContract implements ITest {
     }
 
     /**
-     * Verifies that {@link AbstractTypes#requireValidTypes(javax.lang.model.type.TypeMirror[])} throws exceptions if
+     * Verifies that {@link AbstractTypes#requireValidTypes(TypeMirror[])} throws exceptions if
      * passed null or an array with null element.
      */
     @Test
@@ -963,7 +963,7 @@ public final class AbstractTypesContract implements ITest {
     }
 
     /**
-     * Verifies {@link javax.lang.model.element.TypeElement#asType()}.
+     * Verifies {@link TypeElement#asType()}.
      */
     @Test
     public void asType() {
@@ -1022,7 +1022,7 @@ public final class AbstractTypesContract implements ITest {
 
     /**
      * Verifies
-     * {@link AbstractTypes#getTypeVariable(javax.lang.model.element.TypeParameterElement, TypeMirror, TypeMirror, WildcardType)}.
+     * {@link AbstractTypes#getTypeVariable(TypeParameterElement, TypeMirror, TypeMirror, WildcardType)}.
      */
     @Test
     public void testGetTypeVariable() {

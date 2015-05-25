@@ -7,4 +7,5 @@
  * implementations. Instead, this package supports all implementations that follow the contracts set forth in
  * {@link javax.lang.model.util.Types} and {@link net.florianschoppmann.java.type.AbstractTypes}.
  */
+@NonNullByDefault
 package net.florianschoppmann.java.type;

@@ -4,6 +4,7 @@ import net.florianschoppmann.java.reflect.ReflectionTypes;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import javax.annotation.Nullable;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
@@ -62,7 +63,7 @@ public class ExtendedTypeKindVisitor7Test {
         }
 
         @Override
-        public <R, P> R accept(TypeVisitor<R, P> visitor, P parameter) {
+        public <R, P> R accept(TypeVisitor<R, P> visitor, @Nullable P parameter) {
             return visitor.visitUnknown(this, parameter);
         }
     }
@@ -74,14 +75,14 @@ public class ExtendedTypeKindVisitor7Test {
         }
 
         @Override
-        public <R, P> R accept(TypeVisitor<R, P> visitor, P parameter) {
+        public <R, P> R accept(TypeVisitor<R, P> visitor, @Nullable P parameter) {
             return visitor.visitUnknown(this, parameter);
         }
     }
 
     private static final class SomeVisitor extends ExtendedTypeKindVisitor7<String, String> {
         @Override
-        public String visitOther(TypeMirror typeMirror, String parameter) {
+        public String visitOther(TypeMirror typeMirror, @Nullable String parameter) {
             return "unknown";
         }
     }

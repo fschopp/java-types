@@ -1,0 +1,23 @@
+<root>
+  <item name='javax.lang.model.element.Element R accept(javax.lang.model.element.ElementVisitor&lt;R,P&gt;, P) 0'>
+    <annotation name='javax.annotation.Nonnull'/>
+  </item>
+  <item name='javax.lang.model.element.ElementVisitor R visitExecutable(javax.lang.model.element.ExecutableElement, P) 0'>
+    <annotation name='javax.annotation.Nonnull'/>
+  </item>
+  <item name='javax.lang.model.element.ElementVisitor R visitPackage(javax.lang.model.element.PackageElement, P) 0'>
+    <annotation name='javax.annotation.Nonnull'/>
+  </item>
+  <item name='javax.lang.model.element.ElementVisitor R visitType(javax.lang.model.element.TypeElement, P) 0'>
+    <annotation name='javax.annotation.Nonnull'/>
+  </item>
+  <item name='javax.lang.model.element.ElementVisitor R visitTypeParameter(javax.lang.model.element.TypeParameterElement, P) 0'>
+    <annotation name='javax.annotation.Nonnull'/>
+  </item>
+  <item name='javax.lang.model.element.ElementVisitor R visitVariable(javax.lang.model.element.VariableElement, P) 0'>
+    <annotation name='javax.annotation.Nonnull'/>
+  </item>
+  <item name='javax.lang.model.element.Name boolean contentEquals(java.lang.CharSequence) 0'>
+    <annotation name='javax.annotation.Nonnull'/>
+  </item>
+</root>

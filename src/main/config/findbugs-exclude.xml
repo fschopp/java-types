@@ -1,0 +1,8 @@
+<FindBugsFilter>
+    <!-- Due to http://sourceforge.net/p/findbugs/bugs/1385/ exclude warnings about tightening nullness annotation on
+         parameter. -->
+    <Match>
+        <Method name="equals" params="java.lang.Object" returns="boolean" />
+        <Bug pattern="NP_METHOD_PARAMETER_TIGHTENS_ANNOTATION" />
+    </Match>
+</FindBugsFilter>

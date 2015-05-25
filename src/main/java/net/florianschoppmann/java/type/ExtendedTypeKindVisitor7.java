@@ -1,9 +1,11 @@
 package net.florianschoppmann.java.type;
 
+import javax.annotation.Nullable;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.UnknownTypeException;
 import javax.lang.model.util.TypeKindVisitor7;
+import java.util.Objects;
 
 import static javax.lang.model.SourceVersion.RELEASE_7;
 
@@ -47,10 +49,12 @@ public class ExtendedTypeKindVisitor7<R, P> extends TypeKindVisitor7<R, P> {
      * @param typeMirror the type to visit
      * @param parameter a visitor-specified parameter
      * @return a visitor-specified result
-     * @throws javax.lang.model.type.UnknownTypeException a visitor implementation may optionally throw this exception
+     * @throws UnknownTypeException a visitor implementation may optionally throw this exception
      */
     @Override
-    public final R visitUnknown(TypeMirror typeMirror, P parameter) {
+    @Nullable
+    public final R visitUnknown(TypeMirror typeMirror, @Nullable P parameter) {
+        Objects.requireNonNull(typeMirror);
         if (typeMirror instanceof IntersectionType && ((IntersectionType) typeMirror).isIntersectionType()) {
             return visitIntersection((IntersectionType) typeMirror, parameter);
         } else {
@@ -63,14 +67,15 @@ public class ExtendedTypeKindVisitor7<R, P> extends TypeKindVisitor7<R, P> {
      * {@link TypeMirror} hierarchy.
      *
      * <p>The default implementation of this method in {@code TypeKindVisitor7WithIntersectionType} will always throw
-     * {@link javax.lang.model.type.UnknownTypeException}. This behavior is not required of a subclass.
+     * {@link UnknownTypeException}. This behavior is not required of a subclass.
      *
      * @param typeMirror the type to visit
      * @param parameter a visitor-specified parameter
      * @return a visitor-specified result
-     * @throws javax.lang.model.type.UnknownTypeException a visitor implementation may optionally throw this exception
+     * @throws UnknownTypeException a visitor implementation may optionally throw this exception
      */
-    public R visitOther(TypeMirror typeMirror, P parameter) {
+    @Nullable
+    public R visitOther(TypeMirror typeMirror, @Nullable P parameter) {
         throw new UnknownTypeException(typeMirror, parameter);
     }
 
@@ -81,7 +86,8 @@ public class ExtendedTypeKindVisitor7<R, P> extends TypeKindVisitor7<R, P> {
      * @param parameter a visitor-specified parameter
      * @return the result of {@code defaultAction}
      */
-    public R visitIntersection(IntersectionType intersectionType, P parameter) {
+    @Nullable
+    public R visitIntersection(IntersectionType intersectionType, @Nullable P parameter) {
         return defaultAction(intersectionType, parameter);
     }
 }
