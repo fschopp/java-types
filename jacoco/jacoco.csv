@@ -1,0 +1,26 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+Java Types,net.florianschoppmann.java.type,AbstractTypes.ErasureVisitor,0,58,0,2,0,9,0,7,0,6
+Java Types,net.florianschoppmann.java.type,AbstractTypes.TypeDeclarationVertexState,0,46,0,2,0,15,0,3,0,2
+Java Types,net.florianschoppmann.java.type,AbstractTypes.SubtypeVisitor,22,152,12,26,0,21,12,14,0,7
+Java Types,net.florianschoppmann.java.type,AbstractTypes.Substitutions,0,9,0,0,0,4,0,1,0,1
+Java Types,net.florianschoppmann.java.type,AbstractTypes.SubstitutionVisitor,28,184,13,23,0,38,13,14,0,9
+Java Types,net.florianschoppmann.java.type,AbstractTypes.ToStringVisitor,38,235,19,33,0,58,19,18,0,11
+Java Types,net.florianschoppmann.java.type,AbstractTypes.DeclaredTypeSubtypeVisitor,18,170,9,33,0,38,9,18,0,6
+Java Types,net.florianschoppmann.java.type,ExtendedTypeKindVisitor7,0,40,0,4,0,10,0,7,0,5
+Java Types,net.florianschoppmann.java.type,AbstractTypes,14,1002,11,125,0,224,11,74,0,17
+Java Types,net.florianschoppmann.java.reflect,ImmutableList,0,39,0,2,0,10,0,7,0,6
+Java Types,net.florianschoppmann.java.reflect,ReflectionTypes,25,897,15,89,1,181,16,69,1,32
+Java Types,net.florianschoppmann.java.reflect,TypeVariableImpl,18,190,12,22,0,46,12,19,0,14
+Java Types,net.florianschoppmann.java.reflect,TypeParameterElementImpl,7,120,3,11,0,28,3,18,0,14
+Java Types,net.florianschoppmann.java.reflect,ElementImpl,26,32,2,2,3,9,2,4,0,4
+Java Types,net.florianschoppmann.java.reflect,IntersectionTypeImpl,0,63,0,6,0,15,0,11,0,8
+Java Types,net.florianschoppmann.java.reflect,MirrorContext,0,80,0,6,0,18,0,7,0,4
+Java Types,net.florianschoppmann.java.reflect,PrimitiveTypeImpl,0,59,0,0,0,14,0,5,0,5
+Java Types,net.florianschoppmann.java.reflect,DeclaredTypeImpl,0,100,2,10,0,23,2,13,0,9
+Java Types,net.florianschoppmann.java.reflect,NameImpl,31,25,6,0,7,7,6,5,3,5
+Java Types,net.florianschoppmann.java.reflect,NoTypeImpl,0,29,0,0,0,8,0,5,0,5
+Java Types,net.florianschoppmann.java.reflect,NullTypeImpl,0,19,0,0,0,5,0,5,0,5
+Java Types,net.florianschoppmann.java.reflect,ArrayTypeImpl,0,60,0,6,0,14,0,10,0,7
+Java Types,net.florianschoppmann.java.reflect,AnnotatedConstructImpl,18,3,0,0,4,1,4,1,4,1
+Java Types,net.florianschoppmann.java.reflect,WildcardTypeImpl,1,72,2,8,0,17,2,11,0,8
+Java Types,net.florianschoppmann.java.reflect,TypeElementImpl,17,319,7,37,0,69,7,32,0,17

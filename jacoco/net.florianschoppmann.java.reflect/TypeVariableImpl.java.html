@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>TypeVariableImpl.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Java Types</a> &gt; <a href="index.source.html" class="el_package">net.florianschoppmann.java.reflect</a> &gt; <span class="el_source">TypeVariableImpl.java</span></div><h1>TypeVariableImpl.java</h1><pre class="source lang-java linenums">package net.florianschoppmann.java.reflect;
+
+import javax.annotation.Nullable;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeVariable;
+import javax.lang.model.type.TypeVisitor;
+import java.util.Objects;
+
+<span class="pc bpc" id="L9" title="1 of 2 branches missed.">final class TypeVariableImpl extends AnnotatedConstructImpl implements ReflectionTypeMirror, TypeVariable {</span>
+<span class="fc" id="L10">    private boolean frozen = false;</span>
+
+    private final TypeParameterElementImpl typeParameterElement;
+    @Nullable private final WildcardTypeImpl capturedTypeArgument;
+    @Nullable private ReflectionTypeMirror upperBound;
+    @Nullable private ReflectionTypeMirror lowerBound;
+
+<span class="fc" id="L17">    TypeVariableImpl(TypeParameterElementImpl typeParameterElement, @Nullable WildcardTypeImpl capturedTypeArgument) {</span>
+<span class="fc" id="L18">        Objects.requireNonNull(typeParameterElement);</span>
+
+<span class="fc" id="L20">        this.typeParameterElement = typeParameterElement;</span>
+<span class="fc" id="L21">        this.capturedTypeArgument = capturedTypeArgument;</span>
+<span class="fc" id="L22">    }</span>
+
+    @Override
+    public boolean equals(@Nullable Object otherObject) {
+<span class="fc bfc" id="L26" title="All 2 branches covered.">        if (this == otherObject) {</span>
+<span class="fc" id="L27">            return true;</span>
+<span class="fc bfc" id="L28" title="All 4 branches covered.">        } else if (otherObject == null || getClass() != otherObject.getClass()) {</span>
+<span class="fc" id="L29">            return false;</span>
+        }
+
+<span class="fc" id="L32">        requireFrozen();</span>
+<span class="pc bpc" id="L33" title="3 of 6 branches missed.">        assert upperBound != null &amp;&amp; lowerBound != null : &quot;must be non-null when frozen&quot;;</span>
+
+<span class="fc" id="L35">        TypeVariableImpl other = (TypeVariableImpl) otherObject;</span>
+<span class="pc bpc" id="L36" title="1 of 2 branches missed.">        return typeParameterElement.equals(other.typeParameterElement)</span>
+<span class="pc bpc" id="L37" title="1 of 2 branches missed.">            &amp;&amp; Objects.equals(capturedTypeArgument, other.capturedTypeArgument)</span>
+<span class="pc bpc" id="L38" title="1 of 2 branches missed.">            &amp;&amp; upperBound.equals(other.upperBound)</span>
+<span class="pc bpc" id="L39" title="1 of 2 branches missed.">            &amp;&amp; lowerBound.equals(other.lowerBound);</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="fc" id="L44">        requireFrozen();</span>
+
+<span class="fc" id="L46">        return Objects.hash(typeParameterElement, capturedTypeArgument, upperBound, lowerBound);</span>
+    }
+
+    @Override
+    public &lt;R, P&gt; R accept(TypeVisitor&lt;R, P&gt; visitor, @Nullable P parameter) {
+<span class="fc" id="L51">        return visitor.visitTypeVariable(this, parameter);</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="fc" id="L56">        return ReflectionTypes.getInstance().toString(this);</span>
+    }
+
+    void requireUnfrozen() {
+<span class="fc bfc" id="L60" title="All 2 branches covered.">        if (frozen) {</span>
+<span class="fc" id="L61">            throw new IllegalStateException(String.format(</span>
+<span class="fc" id="L62">                &quot;Tried to modify instance of %s after it became effectively immutable.&quot;, getClass()</span>
+            ));
+        }
+<span class="fc" id="L65">    }</span>
+
+    void requireFrozen() {
+<span class="fc bfc" id="L68" title="All 2 branches covered.">        if (!frozen) {</span>
+<span class="fc" id="L69">            throw new IllegalStateException(String.format(</span>
+<span class="fc" id="L70">                &quot;Instance of %s used before object construction finished.&quot;, getClass()</span>
+            ));
+        }
+<span class="fc" id="L73">    }</span>
+
+    @Override
+    public TypeParameterElementImpl asElement() {
+<span class="fc" id="L77">        return typeParameterElement;</span>
+    }
+
+    @Override
+    public ReflectionTypeMirror getUpperBound() {
+<span class="fc" id="L82">        requireFrozen();</span>
+<span class="pc bpc" id="L83" title="2 of 4 branches missed.">        assert upperBound != null : &quot;must be non-null when frozen&quot;;</span>
+<span class="fc" id="L84">        return upperBound;</span>
+    }
+
+    @Override
+    public ReflectionTypeMirror getLowerBound() {
+<span class="fc" id="L89">        requireFrozen();</span>
+<span class="pc bpc" id="L90" title="2 of 4 branches missed.">        assert lowerBound != null : &quot;must be non-null when frozen&quot;;</span>
+<span class="fc" id="L91">        return lowerBound;</span>
+    }
+
+    void setUpperAndLowerBounds(ReflectionTypeMirror newUpperBound, ReflectionTypeMirror newLowerBound) {
+<span class="fc" id="L95">        requireUnfrozen();</span>
+<span class="fc" id="L96">        Objects.requireNonNull(newUpperBound);</span>
+<span class="fc" id="L97">        Objects.requireNonNull(newLowerBound);</span>
+
+<span class="fc" id="L99">        upperBound = newUpperBound;</span>
+<span class="fc" id="L100">        lowerBound = newLowerBound;</span>
+<span class="fc" id="L101">        frozen = true;</span>
+<span class="fc" id="L102">    }</span>
+
+    @Override
+    public TypeKind getKind() {
+<span class="fc" id="L106">        return TypeKind.TYPEVAR;</span>
+    }
+
+    @Nullable
+    WildcardTypeImpl getCapturedTypeArgument() {
+<span class="fc" id="L111">        return capturedTypeArgument;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

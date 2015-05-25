@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>MirrorContext.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Java Types</a> &gt; <a href="index.source.html" class="el_package">net.florianschoppmann.java.reflect</a> &gt; <span class="el_source">MirrorContext.java</span></div><h1>MirrorContext.java</h1><pre class="source lang-java linenums">package net.florianschoppmann.java.reflect;
+
+import javax.annotation.Nullable;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+final class MirrorContext {
+    private final ReflectionTypes reflectionTypes;
+    private final Map&lt;Class&lt;?&gt;, TypeElementImpl&gt; typeDeclarations;
+    private final Map&lt;Class&lt;?&gt;, TypeElementImpl&gt; newTypeDeclarations;
+
+    MirrorContext(ReflectionTypes reflectionTypes, Map&lt;Class&lt;?&gt;, TypeElementImpl&gt; typeDeclarations,
+<span class="fc" id="L15">            Map&lt;Class&lt;?&gt;, TypeElementImpl&gt; newTypeDeclarations) {</span>
+<span class="fc" id="L16">        this.reflectionTypes = reflectionTypes;</span>
+<span class="fc" id="L17">        this.typeDeclarations = typeDeclarations;</span>
+<span class="fc" id="L18">        this.newTypeDeclarations = newTypeDeclarations;</span>
+<span class="fc" id="L19">    }</span>
+
+    ImmutableList&lt;ReflectionTypeMirror&gt; mirror(Type[] types) {
+<span class="fc" id="L22">        List&lt;ReflectionTypeMirror&gt; typeMirrors = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L23" title="All 2 branches covered.">        for (Type type: types) {</span>
+<span class="fc" id="L24">            typeMirrors.add(reflectionTypes.mirrorInternal(type, this));</span>
+        }
+<span class="fc" id="L26">        return ImmutableList.copyOf(typeMirrors);</span>
+    }
+
+    /**
+     * Returns a type mirror for the given {@link Type} object.
+     *
+     * &lt;p&gt;This method creates a type mirror within this mirror context. This is similar, but different, to
+     * {@link ReflectionTypes#typeMirror(Type)}, which starts a &lt;em&gt;new&lt;/em&gt; mirror context.
+     *
+     * @param type type as represented by Java Reflection API
+     * @return type mirror for the given reflection type
+     */
+    ReflectionTypeMirror mirror(Type type) {
+<span class="fc" id="L39">        return reflectionTypes.mirrorInternal(type, this);</span>
+    }
+
+    /**
+     * Returns a type element for the given {@link Class} object.
+     *
+     * &lt;p&gt;This methods provides a type element that has been created within this mirror context. Within a mirror
+     * context, type elements are always reused. This method is similar, but different, to
+     * {@link ReflectionTypes#typeElement(Class)}, which starts a &lt;em&gt;new&lt;/em&gt; mirror context.
+     *
+     * @param clazz class object
+     * @return type element for the given class
+     */
+    TypeElementImpl typeDeclaration(Class&lt;?&gt; clazz) {
+<span class="fc" id="L53">        @Nullable TypeElementImpl typeDeclaration = typeDeclarations.get(clazz);</span>
+<span class="fc bfc" id="L54" title="All 2 branches covered.">        if (typeDeclaration != null) {</span>
+<span class="fc" id="L55">            return typeDeclaration;</span>
+        }
+
+<span class="fc" id="L58">        @Nullable TypeElementImpl newTypeDeclaration = newTypeDeclarations.get(clazz);</span>
+<span class="fc bfc" id="L59" title="All 2 branches covered.">        if (newTypeDeclaration == null) {</span>
+<span class="fc" id="L60">            newTypeDeclaration = new TypeElementImpl(clazz);</span>
+<span class="fc" id="L61">            newTypeDeclarations.put(clazz, newTypeDeclaration);</span>
+        }
+<span class="fc" id="L63">        return newTypeDeclaration;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

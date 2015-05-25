@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>AnnotatedConstructImpl.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Java Types</a> &gt; <a href="index.source.html" class="el_package">net.florianschoppmann.java.reflect</a> &gt; <span class="el_source">AnnotatedConstructImpl.java</span></div><h1>AnnotatedConstructImpl.java</h1><pre class="source lang-java linenums">package net.florianschoppmann.java.reflect;
+
+import net.florianschoppmann.java.type.AnnotatedConstruct;
+
+import javax.lang.model.element.AnnotationMirror;
+import java.lang.annotation.Annotation;
+import java.util.List;
+
+<span class="fc" id="L9">abstract class AnnotatedConstructImpl implements AnnotatedConstruct {</span>
+    static UnsupportedOperationException unsupportedException() {
+<span class="nc" id="L11">        return new UnsupportedOperationException(String.format(</span>
+            &quot;Annotations not currently supported by %s.&quot;, ReflectionTypes.class
+        ));
+    }
+
+    @Override
+    public final List&lt;? extends AnnotationMirror&gt; getAnnotationMirrors() {
+<span class="nc" id="L18">        throw unsupportedException();</span>
+    }
+
+    @Override
+    public final &lt;A extends Annotation&gt; A getAnnotation(Class&lt;A&gt; annotationType) {
+<span class="nc" id="L23">        throw unsupportedException();</span>
+    }
+
+    @Override
+    public final &lt;A extends Annotation&gt; A[] getAnnotationsByType(Class&lt;A&gt; annotationType) {
+<span class="nc" id="L28">        throw unsupportedException();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

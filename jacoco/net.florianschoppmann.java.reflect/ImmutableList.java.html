@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ImmutableList.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Java Types</a> &gt; <a href="index.source.html" class="el_package">net.florianschoppmann.java.reflect</a> &gt; <span class="el_source">ImmutableList.java</span></div><h1>ImmutableList.java</h1><pre class="source lang-java linenums">package net.florianschoppmann.java.reflect;
+
+import javax.annotation.Nullable;
+import java.util.AbstractList;
+import java.util.List;
+
+final class ImmutableList&lt;E&gt; extends AbstractList&lt;E&gt; {
+<span class="fc" id="L8">    private static final ImmutableList&lt;?&gt; EMPTY_LIST = new ImmutableList&lt;&gt;(new Object[0]);</span>
+
+    private final Object[] array;
+
+<span class="fc" id="L12">    private ImmutableList(Object[] array) {</span>
+<span class="fc" id="L13">        this.array = array;</span>
+<span class="fc" id="L14">    }</span>
+
+    static &lt;E&gt; ImmutableList&lt;E&gt; copyOf(List&lt;E&gt; original) {
+<span class="fc bfc" id="L17" title="All 2 branches covered.">        if (original instanceof ImmutableList&lt;?&gt;) {</span>
+<span class="fc" id="L18">            return (ImmutableList&lt;E&gt;) original;</span>
+        } else {
+<span class="fc" id="L20">            return new ImmutableList&lt;&gt;(original.toArray(new Object[original.size()]));</span>
+        }
+    }
+
+    @SuppressWarnings(&quot;unchecked&quot;)
+    static &lt;E&gt; ImmutableList&lt;E&gt; emptyList() {
+<span class="fc" id="L26">        return (ImmutableList&lt;E&gt;) EMPTY_LIST;</span>
+    }
+
+    @Override
+    @Nullable
+    @SuppressWarnings(&quot;unchecked&quot;)
+    public E get(int index) {
+<span class="fc" id="L33">        return (E) array[index];</span>
+    }
+
+    @Override
+    public int size() {
+<span class="fc" id="L38">        return array.length;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

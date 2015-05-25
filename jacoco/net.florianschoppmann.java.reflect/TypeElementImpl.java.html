@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>TypeElementImpl.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Java Types</a> &gt; <a href="index.source.html" class="el_package">net.florianschoppmann.java.reflect</a> &gt; <span class="el_source">TypeElementImpl.java</span></div><h1>TypeElementImpl.java</h1><pre class="source lang-java linenums">package net.florianschoppmann.java.reflect;
+
+import javax.annotation.Nullable;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ElementVisitor;
+import javax.lang.model.element.Name;
+import javax.lang.model.element.NestingKind;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeMirror;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+<span class="pc bpc" id="L16" title="1 of 2 branches missed.">final class TypeElementImpl extends ElementImpl implements TypeElement, ReflectionParameterizable {</span>
+    private final Class&lt;?&gt; clazz;
+    private final ImmutableList&lt;TypeParameterElementImpl&gt; typeParameters;
+    @Nullable private ReflectionElement enclosingElement;
+    @Nullable private ReflectionTypeMirror superClass;
+    @Nullable private List&lt;ReflectionTypeMirror&gt; interfaces;
+    @Nullable private List&lt;ElementImpl&gt; enclosedElements;
+
+    /**
+     * Cache the type returned by {@link #asType()}.
+     *
+     * &lt;p&gt;Similarly to {@link String#hashCode()}, caching is not synchronized. This means that different threads may
+     * (at least theoretically) see different values for this field. However, this is not a problem because all such
+     * values would compare equal. Moreover, §17.7 JLS specifies that &quot;Writes to and reads of references are always
+     * atomic, regardless of whether they are implemented as 32-bit or 64-bit values&quot;. Hence, even if caches were
+     * updated, every access to this field would yield a well-defined result.
+     */
+    @Nullable private DeclaredTypeImpl type;
+
+<span class="fc" id="L35">    TypeElementImpl(Class&lt;?&gt; clazz) {</span>
+<span class="fc" id="L36">        this.clazz = Objects.requireNonNull(clazz);</span>
+
+<span class="fc" id="L38">        List&lt;TypeParameterElementImpl&gt; newTypeParameters = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L39" title="All 2 branches covered.">        for (TypeVariable&lt;?&gt; parameter: clazz.getTypeParameters()) {</span>
+<span class="fc" id="L40">            newTypeParameters.add(new TypeParameterElementImpl(parameter, this));</span>
+        }
+<span class="fc" id="L42">        typeParameters = ImmutableList.copyOf(newTypeParameters);</span>
+<span class="fc" id="L43">    }</span>
+
+    @Override
+    public boolean equals(@Nullable Object otherObject) {
+<span class="fc bfc" id="L47" title="All 2 branches covered.">        if (this == otherObject) {</span>
+<span class="fc" id="L48">            return true;</span>
+<span class="fc bfc" id="L49" title="All 4 branches covered.">        } else if (otherObject == null || getClass() != otherObject.getClass()) {</span>
+<span class="fc" id="L50">            return false;</span>
+        }
+
+<span class="fc" id="L53">        return clazz.equals(((TypeElementImpl) otherObject).clazz);</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="fc" id="L58">        return clazz.hashCode();</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="fc" id="L63">        return clazz.toString();</span>
+    }
+
+    @Override
+    public &lt;R, P&gt; R accept(ElementVisitor&lt;R, P&gt; visitor, @Nullable P parameter) {
+<span class="fc" id="L68">        return visitor.visitType(this, parameter);</span>
+    }
+
+    @Override
+    public List&lt;ElementImpl&gt; getEnclosedElements() {
+<span class="fc" id="L73">        requireFinished();</span>
+<span class="pc bpc" id="L74" title="2 of 4 branches missed.">        assert enclosedElements != null : &quot;must be non-null when finished&quot;;</span>
+<span class="fc" id="L75">        return enclosedElements;</span>
+    }
+
+    @Override
+    public NestingKind getNestingKind() {
+<span class="fc" id="L80">        throw new UnsupportedOperationException(String.format(</span>
+            &quot;Nesting kind not currently supported by %s.&quot;, ReflectionTypes.class
+        ));
+    }
+
+    @Override
+    public NameImpl getQualifiedName() {
+<span class="fc" id="L87">        return new NameImpl(clazz.getCanonicalName());</span>
+    }
+
+    @Override
+    public Name getSimpleName() {
+<span class="fc" id="L92">        return new NameImpl(clazz.getSimpleName());</span>
+    }
+
+    @Override
+    public TypeMirror getSuperclass() {
+<span class="fc" id="L97">        requireFinished();</span>
+<span class="pc bpc" id="L98" title="2 of 4 branches missed.">        assert superClass != null : &quot;must be non-null when finished&quot;;</span>
+<span class="fc" id="L99">        return superClass;</span>
+    }
+
+    @Override
+    public List&lt;? extends TypeMirror&gt; getInterfaces() {
+<span class="fc" id="L104">        requireFinished();</span>
+<span class="pc bpc" id="L105" title="2 of 4 branches missed.">        assert interfaces != null : &quot;must be non-null when finished&quot;;</span>
+<span class="fc" id="L106">        return interfaces;</span>
+    }
+
+    @Override
+    public List&lt;TypeParameterElementImpl&gt; getTypeParameters() {
+<span class="fc" id="L111">        return typeParameters;</span>
+    }
+
+    @Override
+    public ReflectionElement getEnclosingElement() {
+<span class="fc" id="L116">        requireFinished();</span>
+
+<span class="fc bfc" id="L118" title="All 2 branches covered.">        if (enclosingElement == null) {</span>
+<span class="fc" id="L119">            throw new UnsupportedOperationException(&quot;getEnclosingElement() not supported for top-level classes.&quot;);</span>
+        } else {
+<span class="fc" id="L121">            return enclosingElement;</span>
+        }
+    }
+
+    @Override
+    public DeclaredTypeImpl asType() {
+<span class="fc" id="L127">        requireFinished();</span>
+
+<span class="fc" id="L129">        @Nullable DeclaredTypeImpl localType = type;</span>
+<span class="fc bfc" id="L130" title="All 2 branches covered.">        if (localType == null) {</span>
+<span class="fc" id="L131">            List&lt;TypeVariableImpl&gt; prototypicalTypeArguments = new ArrayList&lt;&gt;(typeParameters.size());</span>
+<span class="fc bfc" id="L132" title="All 2 branches covered.">            for (TypeParameterElementImpl typeParameter: typeParameters) {</span>
+<span class="fc" id="L133">                prototypicalTypeArguments.add(typeParameter.asType());</span>
+<span class="fc" id="L134">            }</span>
+
+<span class="fc bfc" id="L136" title="All 2 branches covered.">            ReflectionTypeMirror enclosingType = enclosingElement == null</span>
+                ? NoTypeImpl.NONE
+<span class="fc" id="L138">                : enclosingElement.asType();</span>
+<span class="fc" id="L139">            localType = new DeclaredTypeImpl(enclosingType, this, prototypicalTypeArguments);</span>
+<span class="fc" id="L140">            type = localType;</span>
+        }
+<span class="fc" id="L142">        return localType;</span>
+    }
+
+    @Override
+    public ElementKind getKind() {
+<span class="fc bfc" id="L147" title="All 2 branches covered.">        if (clazz.isEnum()) {</span>
+<span class="fc" id="L148">            return ElementKind.ENUM;</span>
+<span class="fc bfc" id="L149" title="All 2 branches covered.">        } else if (clazz.isAnnotation()) {</span>
+<span class="fc" id="L150">            return ElementKind.ANNOTATION_TYPE;</span>
+<span class="fc bfc" id="L151" title="All 2 branches covered.">        } else if (clazz.isInterface()) {</span>
+<span class="fc" id="L152">            return ElementKind.INTERFACE;</span>
+        } else {
+<span class="fc" id="L154">            return ElementKind.CLASS;</span>
+        }
+    }
+
+    @Override
+    protected void finishDerivedFromElement(MirrorContext mirrorContext) {
+<span class="fc" id="L160">        @Nullable Class&lt;?&gt; enclosingClass = clazz.getEnclosingClass();</span>
+<span class="fc bfc" id="L161" title="All 2 branches covered.">        enclosingElement = enclosingClass == null</span>
+            ? null
+<span class="fc" id="L163">            : mirrorContext.typeDeclaration(enclosingClass);</span>
+
+<span class="fc" id="L165">        Class&lt;?&gt;[] declaredClasses = clazz.getDeclaredClasses();</span>
+<span class="fc" id="L166">        List&lt;ElementImpl&gt; newEnclosedElements = new ArrayList&lt;&gt;(typeParameters.size() + declaredClasses.length);</span>
+<span class="fc" id="L167">        newEnclosedElements.addAll(typeParameters);</span>
+<span class="fc bfc" id="L168" title="All 2 branches covered.">        for (Class&lt;?&gt; declaredClass: declaredClasses) {</span>
+<span class="fc" id="L169">            newEnclosedElements.add(mirrorContext.typeDeclaration(declaredClass));</span>
+        }
+<span class="fc" id="L171">        enclosedElements = ImmutableList.copyOf(newEnclosedElements);</span>
+
+<span class="fc" id="L173">        @Nullable Type genericSuperClass = clazz.getGenericSuperclass();</span>
+<span class="fc bfc" id="L174" title="All 2 branches covered.">        superClass = genericSuperClass == null</span>
+            ? NoTypeImpl.NONE
+<span class="fc" id="L176">            : mirrorContext.mirror(genericSuperClass);</span>
+<span class="fc" id="L177">        interfaces = mirrorContext.mirror(clazz.getGenericInterfaces());</span>
+<span class="fc bfc" id="L178" title="All 2 branches covered.">        for (TypeParameterElementImpl typeParameter: typeParameters) {</span>
+<span class="fc" id="L179">            typeParameter.finish(mirrorContext);</span>
+<span class="fc" id="L180">        }</span>
+
+        // Field 'type' is lazily initialized in order to break a dependency chain: Constructing type requires
+        // enclosingElement.asType(), which at this point may not yet be available.
+<span class="fc" id="L184">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

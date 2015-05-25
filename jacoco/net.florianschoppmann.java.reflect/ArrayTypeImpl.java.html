@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ArrayTypeImpl.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Java Types</a> &gt; <a href="index.source.html" class="el_package">net.florianschoppmann.java.reflect</a> &gt; <span class="el_source">ArrayTypeImpl.java</span></div><h1>ArrayTypeImpl.java</h1><pre class="source lang-java linenums">package net.florianschoppmann.java.reflect;
+
+import javax.annotation.Nullable;
+import javax.lang.model.type.ArrayType;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeVisitor;
+import java.util.Objects;
+
+final class ArrayTypeImpl extends AnnotatedConstructImpl implements ReflectionTypeMirror, ArrayType {
+    private final ReflectionTypeMirror componentType;
+
+<span class="fc" id="L12">    ArrayTypeImpl(ReflectionTypeMirror componentType) {</span>
+<span class="fc" id="L13">        Objects.requireNonNull(componentType);</span>
+
+<span class="fc" id="L15">        this.componentType = componentType;</span>
+<span class="fc" id="L16">    }</span>
+
+    @Override
+    public boolean equals(@Nullable Object otherObject) {
+<span class="fc bfc" id="L20" title="All 2 branches covered.">        if (this == otherObject) {</span>
+<span class="fc" id="L21">            return true;</span>
+<span class="fc bfc" id="L22" title="All 4 branches covered.">        } else if (otherObject == null || getClass() != otherObject.getClass()) {</span>
+<span class="fc" id="L23">            return false;</span>
+        }
+
+<span class="fc" id="L26">        return componentType.equals(((ArrayTypeImpl) otherObject).componentType);</span>
+    }
+
+    @Override
+    public int hashCode() {
+        // Do not return just componentType.hashCode() because both this instance and componentType are of type
+        // ReflectionTypeMirror.
+<span class="fc" id="L33">        return Objects.hash(getClass(), componentType.hashCode());</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="fc" id="L38">        return ReflectionTypes.getInstance().toString(this);</span>
+    }
+
+    @Override
+    public &lt;R, P&gt; R accept(TypeVisitor&lt;R, P&gt; visitor, @Nullable P parameter) {
+<span class="fc" id="L43">        return visitor.visitArray(this, parameter);</span>
+    }
+
+    @Override
+    public ReflectionTypeMirror getComponentType() {
+<span class="fc" id="L48">        return componentType;</span>
+    }
+
+    @Override
+    public TypeKind getKind() {
+<span class="fc" id="L53">        return TypeKind.ARRAY;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

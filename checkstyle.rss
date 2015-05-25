@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+<rss version="0.91">
+  <channel>
+    <title>Java Types - Checkstyle report</title>
+    <link>https://github.com/fschopp/java-types</link>
+    <description>Java Types - Checkstyle report</description>
+    <language>en-us</language>
+    <copyright>&#169;2014 - 2015</copyright>
+    <item>
+      <title>File: 26,
+             Errors: 0,
+             Warnings: 0,
+             Infos: 0
+      </title>
+            <link>https://github.com/fschopp/java-types/checkstyle.html</link>
+      <description>
+        <p>Click <a href="https://github.com/fschopp/java-types/checkstyle.html">here</a> for the full Checkstyle report.</p>
+
+        <table summary="Files" boder="1">
+          <thead>
+            <tr>
+              <th>Files</th>
+              <th style="width:30px;"><abbr title="Info">I</abbr></th>
+              <th style="width:30px;"><abbr title="Warning">W</abbr></th>
+              <th style="width:30px;"><abbr title="Error">E</abbr></th>
+            </tr>
+          </thead>
+          <tbody>
+                          <tr>
+                <td>
+                  <a href="https://github.com/fschopp/java-types/checkstyle.html#net.florianschoppmann.java.type.ExtendedTypeKindVisitor7.java">net/florianschoppmann/java/type/ExtendedTypeKindVisitor7.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/fschopp/java-types/checkstyle.html#net.florianschoppmann.java.reflect.MirrorContext.java">net/florianschoppmann/java/reflect/MirrorContext.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/fschopp/java-types/checkstyle.html#net.florianschoppmann.java.reflect.TypeParameterElementImpl.java">net/florianschoppmann/java/reflect/TypeParameterElementImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/fschopp/java-types/checkstyle.html#net.florianschoppmann.java.reflect.TypeVariableImpl.java">net/florianschoppmann/java/reflect/TypeVariableImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/fschopp/java-types/checkstyle.html#net.florianschoppmann.java.reflect.WildcardTypeImpl.java">net/florianschoppmann/java/reflect/WildcardTypeImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/fschopp/java-types/checkstyle.html#net.florianschoppmann.java.reflect.PrimitiveTypeImpl.java">net/florianschoppmann/java/reflect/PrimitiveTypeImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/fschopp/java-types/checkstyle.html#net.florianschoppmann.java.reflect.DeclaredTypeImpl.java">net/florianschoppmann/java/reflect/DeclaredTypeImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/fschopp/java-types/checkstyle.html#net.florianschoppmann.java.reflect.ArrayTypeImpl.java">net/florianschoppmann/java/reflect/ArrayTypeImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/fschopp/java-types/checkstyle.html#net.florianschoppmann.java.type.AnnotatedConstruct.java">net/florianschoppmann/java/type/AnnotatedConstruct.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/fschopp/java-types/checkstyle.html#net.florianschoppmann.java.type.package-info.java">net/florianschoppmann/java/type/package-info.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/fschopp/java-types/checkstyle.html#net.florianschoppmann.java.reflect.ImmutableList.java">net/florianschoppmann/java/reflect/ImmutableList.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/fschopp/java-types/checkstyle.html#net.florianschoppmann.java.type.AbstractTypes.java">net/florianschoppmann/java/type/AbstractTypes.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/fschopp/java-types/checkstyle.html#net.florianschoppmann.java.reflect.TypeElementImpl.java">net/florianschoppmann/java/reflect/TypeElementImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/fschopp/java-types/checkstyle.html#net.florianschoppmann.java.reflect.NullTypeImpl.java">net/florianschoppmann/java/reflect/NullTypeImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/fschopp/java-types/checkstyle.html#net.florianschoppmann.java.reflect.ReflectionTypes.java">net/florianschoppmann/java/reflect/ReflectionTypes.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/fschopp/java-types/checkstyle.html#net.florianschoppmann.java.reflect.package-info.java">net/florianschoppmann/java/reflect/package-info.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/fschopp/java-types/checkstyle.html#net.florianschoppmann.java.reflect.ReflectionElement.java">net/florianschoppmann/java/reflect/ReflectionElement.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/fschopp/java-types/checkstyle.html#net.florianschoppmann.java.reflect.IntersectionTypeImpl.java">net/florianschoppmann/java/reflect/IntersectionTypeImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/fschopp/java-types/checkstyle.html#net.florianschoppmann.java.reflect.ElementImpl.java">net/florianschoppmann/java/reflect/ElementImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/fschopp/java-types/checkstyle.html#net.florianschoppmann.java.reflect.ReflectionParameterizable.java">net/florianschoppmann/java/reflect/ReflectionParameterizable.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/fschopp/java-types/checkstyle.html#net.florianschoppmann.java.reflect.NoTypeImpl.java">net/florianschoppmann/java/reflect/NoTypeImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/fschopp/java-types/checkstyle.html#net.florianschoppmann.java.type.IntersectionType.java">net/florianschoppmann/java/type/IntersectionType.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/fschopp/java-types/checkstyle.html#net.florianschoppmann.java.reflect.AnnotatedConstructImpl.java">net/florianschoppmann/java/reflect/AnnotatedConstructImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/fschopp/java-types/checkstyle.html#net.florianschoppmann.java.reflect.NameImpl.java">net/florianschoppmann/java/reflect/NameImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/fschopp/java-types/checkstyle.html#net.florianschoppmann.java.type.NonNullByDefault.java">net/florianschoppmann/java/type/NonNullByDefault.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/fschopp/java-types/checkstyle.html#net.florianschoppmann.java.reflect.ReflectionTypeMirror.java">net/florianschoppmann/java/reflect/ReflectionTypeMirror.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                      </tbody>
+        </table>
+        
+      </description>
+    </item>
+  </channel>
+</rss>
+

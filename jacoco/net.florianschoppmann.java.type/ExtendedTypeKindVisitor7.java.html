@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ExtendedTypeKindVisitor7.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Java Types</a> &gt; <a href="index.source.html" class="el_package">net.florianschoppmann.java.type</a> &gt; <span class="el_source">ExtendedTypeKindVisitor7.java</span></div><h1>ExtendedTypeKindVisitor7.java</h1><pre class="source lang-java linenums">package net.florianschoppmann.java.type;
+
+import javax.annotation.Nullable;
+import javax.annotation.processing.SupportedSourceVersion;
+import javax.lang.model.type.TypeMirror;
+import javax.lang.model.type.UnknownTypeException;
+import javax.lang.model.util.TypeKindVisitor7;
+import java.util.Objects;
+
+import static javax.lang.model.SourceVersion.RELEASE_7;
+
+/**
+ * A visitor of types that supports {@link IntersectionType}, but otherwise behaves as {@link TypeKindVisitor7}.
+ *
+ * &lt;p&gt;This visitor provides a new method {@link #visitIntersection(IntersectionType, Object)} in order to visit
+ * instances of {@link IntersectionType}. At some time in the future, when Java 7 compatibility is no longer
+ * required, {@link IntersectionType} and this class will be removed and replaced by their Java 8 equivalents.
+ *
+ * @param &lt;R&gt; The return type of this visitor's methods. Use {@link Void} for visitors that do not need to return
+ *     results.
+ * @param &lt;P&gt; The type of the additional parameter to this visitor's methods. Use {@code Void} for visitors that do
+ *     not need an additional parameter.
+ */
+@SupportedSourceVersion(RELEASE_7)
+public class ExtendedTypeKindVisitor7&lt;R, P&gt; extends TypeKindVisitor7&lt;R, P&gt; {
+    /**
+     * Constructor for concrete subclasses to call; uses {@code null} for the default value.
+     */
+    protected ExtendedTypeKindVisitor7() {
+<span class="fc" id="L30">        super(null);</span>
+<span class="fc" id="L31">    }</span>
+
+    /**
+     * Constructor for concrete subclasses to call; uses the argument for the default value.
+     *
+     * @param defaultValue the value to assign to {@link #DEFAULT_VALUE}
+     */
+    protected ExtendedTypeKindVisitor7(R defaultValue) {
+<span class="fc" id="L39">        super(defaultValue);</span>
+<span class="fc" id="L40">    }</span>
+
+    /**
+     * Visits an unknown kind of type or an {@link IntersectionType}, which did not exist in the {@link TypeMirror}
+     * hierarchy of Java 7.
+     *
+     * &lt;p&gt;This method is final. Use {@link #visitOther(TypeMirror, Object)} to override the default behavior when
+     * visiting an unknown type.
+     *
+     * @param typeMirror the type to visit
+     * @param parameter a visitor-specified parameter
+     * @return a visitor-specified result
+     * @throws UnknownTypeException a visitor implementation may optionally throw this exception
+     */
+    @Override
+    @Nullable
+    public final R visitUnknown(TypeMirror typeMirror, @Nullable P parameter) {
+<span class="fc" id="L57">        Objects.requireNonNull(typeMirror);</span>
+<span class="fc bfc" id="L58" title="All 4 branches covered.">        if (typeMirror instanceof IntersectionType &amp;&amp; ((IntersectionType) typeMirror).isIntersectionType()) {</span>
+<span class="fc" id="L59">            return visitIntersection((IntersectionType) typeMirror, parameter);</span>
+        } else {
+<span class="fc" id="L61">            return visitOther(typeMirror, parameter);</span>
+        }
+    }
+
+    /**
+     * Visits an unknown kind of type. This can occur if the language evolves and new kinds of types are added to the
+     * {@link TypeMirror} hierarchy.
+     *
+     * &lt;p&gt;The default implementation of this method in {@code TypeKindVisitor7WithIntersectionType} will always throw
+     * {@link UnknownTypeException}. This behavior is not required of a subclass.
+     *
+     * @param typeMirror the type to visit
+     * @param parameter a visitor-specified parameter
+     * @return a visitor-specified result
+     * @throws UnknownTypeException a visitor implementation may optionally throw this exception
+     */
+    @Nullable
+    public R visitOther(TypeMirror typeMirror, @Nullable P parameter) {
+<span class="fc" id="L79">        throw new UnknownTypeException(typeMirror, parameter);</span>
+    }
+
+    /**
+     * Visits an intersection type by calling {@link #defaultAction(TypeMirror, Object)}.
+     *
+     * @param intersectionType the intersection type to visit
+     * @param parameter a visitor-specified parameter
+     * @return the result of {@code defaultAction}
+     */
+    @Nullable
+    public R visitIntersection(IntersectionType intersectionType, @Nullable P parameter) {
+<span class="fc" id="L91">        return defaultAction(intersectionType, parameter);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

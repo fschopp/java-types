@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>TypeParameterElementImpl.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Java Types</a> &gt; <a href="index.source.html" class="el_package">net.florianschoppmann.java.reflect</a> &gt; <span class="el_source">TypeParameterElementImpl.java</span></div><h1>TypeParameterElementImpl.java</h1><pre class="source lang-java linenums">package net.florianschoppmann.java.reflect;
+
+import javax.annotation.Nullable;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ElementVisitor;
+import javax.lang.model.element.Name;
+import javax.lang.model.element.TypeParameterElement;
+import java.lang.reflect.TypeVariable;
+import java.util.List;
+import java.util.Objects;
+
+<span class="pc bpc" id="L12" title="1 of 2 branches missed.">final class TypeParameterElementImpl extends ElementImpl implements TypeParameterElement {</span>
+    private final TypeVariable&lt;?&gt; reflectionTypeVariable;
+    private final ElementImpl genericElement;
+    private final TypeVariableImpl typeVariable;
+    @Nullable private List&lt;ReflectionTypeMirror&gt; bounds;
+
+<span class="fc" id="L18">    TypeParameterElementImpl(TypeVariable&lt;?&gt; reflectionTypeVariable, ElementImpl genericElement) {</span>
+<span class="fc" id="L19">        this.reflectionTypeVariable = Objects.requireNonNull(reflectionTypeVariable);</span>
+<span class="fc" id="L20">        this.genericElement = Objects.requireNonNull(genericElement);</span>
+<span class="fc" id="L21">        typeVariable = new TypeVariableImpl(this, null);</span>
+<span class="fc" id="L22">    }</span>
+
+    @Override
+    public boolean equals(@Nullable Object otherObject) {
+<span class="fc bfc" id="L26" title="All 2 branches covered.">        if (this == otherObject) {</span>
+<span class="fc" id="L27">            return true;</span>
+<span class="fc bfc" id="L28" title="All 4 branches covered.">        } else if (otherObject == null || getClass() != otherObject.getClass()) {</span>
+<span class="fc" id="L29">            return false;</span>
+        }
+
+<span class="fc" id="L32">        return reflectionTypeVariable.equals(((TypeParameterElementImpl) otherObject).reflectionTypeVariable);</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="fc" id="L37">        return reflectionTypeVariable.hashCode();</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="fc" id="L42">        return reflectionTypeVariable.toString();</span>
+    }
+
+    @Override
+    public &lt;R, P&gt; R accept(ElementVisitor&lt;R, P&gt; visitor, @Nullable P parameter) {
+<span class="fc" id="L47">        return visitor.visitTypeParameter(this, parameter);</span>
+    }
+
+    @Override
+    public ElementImpl getGenericElement() {
+<span class="fc" id="L52">        return genericElement;</span>
+    }
+
+    @Override
+    public List&lt;ReflectionTypeMirror&gt; getBounds() {
+<span class="fc" id="L57">        requireFinished();</span>
+<span class="pc bpc" id="L58" title="2 of 4 branches missed.">        assert bounds != null : &quot;must be non-null when finished&quot;;</span>
+<span class="fc" id="L59">        return bounds;</span>
+    }
+
+    @Override
+    public ElementImpl getEnclosingElement() {
+<span class="fc" id="L64">        return genericElement;</span>
+    }
+
+    @Override
+    public TypeVariableImpl asType() {
+<span class="fc" id="L69">        return typeVariable;</span>
+    }
+
+    @Override
+    public ElementKind getKind() {
+<span class="fc" id="L74">        return ElementKind.TYPE_PARAMETER;</span>
+    }
+
+    @Override
+    public Name getSimpleName() {
+<span class="fc" id="L79">        return new NameImpl(reflectionTypeVariable.getName());</span>
+    }
+
+    @Override
+    public ImmutableList&lt;? extends ReflectionElement&gt; getEnclosedElements() {
+<span class="fc" id="L84">        return ImmutableList.emptyList();</span>
+    }
+
+    @Override
+    void finishDerivedFromElement(MirrorContext mirrorContext) {
+<span class="fc" id="L89">        bounds = mirrorContext.mirror(reflectionTypeVariable.getBounds());</span>
+<span class="fc bfc" id="L90" title="All 2 branches covered.">        ReflectionTypeMirror bound = bounds.size() == 1</span>
+<span class="fc" id="L91">            ? bounds.get(0)</span>
+            : new IntersectionTypeImpl(bounds);
+<span class="fc" id="L93">        typeVariable.setUpperAndLowerBounds(bound, NullTypeImpl.INSTANCE);</span>
+<span class="fc" id="L94">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
